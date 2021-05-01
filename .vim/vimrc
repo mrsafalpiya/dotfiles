@@ -1,0 +1,190 @@
+" == PLUGINS ==
+" Set leader key to Space
+let g:mapleader = "\<Space>"
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'mbbill/undotree'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-repeat'
+Plug 'jiangmiao/auto-pairs'
+Plug 'andymass/vim-matchup'
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+Plug 'vimwiki/vimwiki'
+
+Plug 'mattn/emmet-vim'
+let g:user_emmet_leader_key='<C-Q>'
+Plug 'alvan/vim-closetag'
+let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.php,*.js,*.jsx"
+Plug 'turbio/bracey.vim', {'do': 'npm install --prefix server'}
+Plug 'maxmellon/vim-jsx-pretty'
+
+Plug 'fatih/vim-go'
+let g:go_gopls_enabled = 0
+let g:go_code_completion_enabled = 0
+let g:go_mod_fmt_autosave = 0
+let g:go_fmt_command = "goimports"
+let g:go_fmt_fail_silently = 1
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_variable_declarations = 1
+let g:go_highlight_variable_assignments = 1
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_diagnostic_errors = 1
+let g:go_highlight_diagnostic_warnings = 1
+
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'mattn/vim-lsp-settings'
+" <CR> to always insert new line
+inoremap <expr> <cr> pumvisible() ? asyncomplete#close_popup() . "\<cr>" : "\<cr>"
+" Bind to force open autocomplete window
+imap <c-space> <Plug>(asyncomplete_force_refresh)
+" Enable preview window
+let g:asyncomplete_auto_completeopt = 0
+set completeopt=menuone,noinsert,noselect,preview
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+" Disable reference highlighting
+let g:lsp_document_highlight_enabled = 0
+
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'prabirshrestha/asyncomplete-file.vim'
+au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
+			\ 'name': 'file',
+			\ 'allowlist': ['*'],
+			\ 'priority': 10,
+			\ 'completor': function('asyncomplete#sources#file#completor')
+			\ }))
+
+call plug#end()
+
+" == VARIABLES ==
+let $RC="$HOME/.vim/vimrc"
+
+" == GENERAL ==
+" Enable filetype plugin and indentation settings
+filetype plugin indent on
+" Enable syntax highlighting
+syntax on
+" Enable proper backspace
+set backspace=indent,eol,start
+" Enable changing buffers without saving current
+set hidden
+" Disable swapfile
+set noswapfile
+" Set path to current directory along with sub directories
+set path=.,**
+" Set clipboard to primary selection
+set clipboard=unnamed
+" Enable undofile
+set undofile
+" Disable new line commenting
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
+" == FIX SLOWNESS ==
+" Enable ttimeout
+set ttimeout
+" Set ttimeoutlen to 0
+set ttimeoutlen=0
+
+" == SEARCHING ==
+" Search as you type
+set incsearch
+" Highlight search matches
+set hls
+" Search is not case sensitive
+set ignorecase
+" Case sensitive search only when upper case used
+set smartcase
+" Enable search count message
+set shortmess-=S
+
+" == WILDMENU ==
+" Enable wildmenu
+set wildmenu
+" Case in-sensitive wildmenu selection
+set wildignorecase
+
+" == APPEARANCE ==
+" Enable line number
+set number
+" Enable relative line number
+set relativenumber
+" Enable list
+set list
+set listchars=eol:¬,tab:\ \ ,nbsp:·,trail:·,extends:…,precedes:…
+" Set background to dark
+set background=dark
+
+" == INDENTATION ==
+" Set tabs width to 5
+set shiftwidth=5
+" Set 5 spaces to tab
+set tabstop=5
+" Automatically indent new line as previous
+set autoindent
+" Enable smart indentation on new line
+set smartindent
+
+" == KEYBINDS ==
+" Jump to guide character
+nmap <Space><Space> <Esc>/<++><Enter>"_c4l
+" leader i to cycle between tab listchars
+function! ToggleIndentLines()
+	if &listchars =~ "tab:\ \ "
+		set listchars=eol:¬,tab:\▏\ ,nbsp:·,trail:·,extends:…,precedes:…
+	elseif &listchars =~ "tab:\▏\ "
+		set listchars=eol:¬,tab:»·,nbsp:·,trail:·,extends:…,precedes:…
+	else
+		set listchars=eol:¬,tab:\ \ ,nbsp:·,trail:·,extends:…,precedes:…
+	endif
+endfunction
+nnoremap <leader>i :call ToggleIndentLines()<CR>
+" Trigger [num]j/k as jumps
+function! JkJumps(key) range
+	exec "normal! ".v:count1.a:key
+	if v:count1 >= 2
+		let target = line('.')
+		let bkey = 'k'
+		if (a:key == 'k')
+			let bkey = 'j'
+		endif
+		exec "normal! ".v:count1.bkey
+		exec "normal! ".target."G"
+	endif
+endfunction
+nnoremap <silent> j :<C-U>call JkJumps('j')<CR>
+nnoremap <silent> k :<C-U>call JkJumps('k')<CR>
+
+" == LSP ==
+function! s:on_lsp_buffer_enabled() abort
+	setlocal signcolumn=number
+	if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
+	nmap <buffer> gd <plug>(lsp-definition)
+	nmap <buffer> gs <plug>(lsp-document-symbol-search)
+	nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
+	nmap <buffer> gr <plug>(lsp-references)
+	nmap <buffer> gi <plug>(lsp-implementation)
+	nmap <buffer> gt <plug>(lsp-type-definition)
+	nmap <buffer> <leader>rn <plug>(lsp-rename)
+	nmap <buffer> [g <plug>(lsp-previous-diagnostic)
+	nmap <buffer> ]g <plug>(lsp-next-diagnostic)
+	nmap <buffer> K <plug>(lsp-hover)
+	inoremap <buffer> <expr><c-f> lsp#scroll(+4)
+	inoremap <buffer> <expr><c-d> lsp#scroll(-4)
+endfunction
+
+augroup lsp_install
+	au!
+	" call s:on_lsp_buffer_enabled only for languages that has the server registered.
+	autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
+
+" Fix vim setguicolors for st
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"

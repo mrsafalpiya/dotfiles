@@ -1,0 +1,43 @@
+#!/bin/sh
+
+getdevid()
+{
+	case $1 in
+		Pointer)
+			dev="slave  pointer"
+			devname="Pointer"
+			;;
+		Keyboard)
+			dev="slave  keyboard"
+			devname="Keyboard"
+			;;
+		*)
+			exit
+			;;
+	esac
+	devid=$(xinput | grep -i "$dev" | dmenu -l 10 -i -p "Select a $devname:" | cut -d'=' -f 2 | awk '{ print $1 }') && getpropid $devid
+}
+
+getpropid()
+{
+	argid=$1
+	propid=$(xinput --list-props $argid | dmenu -l 10 -i -p "Select a property to modify:" | grep -oP '\(\K[^\)]+') && setpropval $argid $propid
+}
+
+setpropval()
+{
+	argid=$1
+	propid=$2
+	propval=$(dmenu -p "Enter the new value of the property:" < /dev/null) && xinput --set-prop $1 $2 $propval ; exit
+}
+
+promptxinput()
+{
+	dev=$(echo "Pointer\\nKeyboard" | dmenu -i -p "Select a device to configure:") && getdevid $dev
+}
+
+[ -z "$1" ] && promptxinput
+
+devid=$(xinput | grep -i "$1" | cut -d'=' -f 2 | awk '{ print $1 }') > /dev/null 2>&1
+propid=$(xinput --list-props $devid | grep -i "$2" | grep -oP '\(\K[^\)]+') > /dev/null 2>&1
+xinput --set-prop $devid $propid $3 > /dev/null 2>&1 || echo "Couldn't set '$1' '$2' prop to '$3'!"

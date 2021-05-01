@@ -1,0 +1,71 @@
+#!/bin/sh
+
+# This is a custom script to auto configure monitors, mouse and touchpad only 
+# if those devices are detected by xrandr and xinput
+
+# Variables detecting screens connected
+monitordev="HDMI1"
+monitordetect=$(xrandr --listmonitors | grep "$monitordev")
+
+# Variables detecting if mouse is connected
+mousedev="USB OPTICAL MOUSE"
+mousepropname="Accel Speed ("
+mousepropvalue="-1"
+mousedetect=$(xinput | grep "$mousedev")
+
+# Variables detecting if touchpad is available
+touchpaddev="SynPS/2 Synaptics TouchPad"
+touchpadpropname="Tapping Enabled ("
+touchpadpropvalue="1"
+touchpadpropname2="Natural Scrolling Enabled ("
+touchpadpropvalue2="1"
+touchpadpropname3="Disable While Typing Enabled ("
+touchpadpropvalue3="0"
+touchpaddetect=$(xinput | grep "$touchpaddev")
+
+# Main functions
+xset r rate 300 50 &
+setxkbmap -option caps:swapescape &
+
+if [ -n "$monitordetect" ]
+then
+	# Script to run when $monitordev connection is detected
+	echo "✔ $monitordev connection detected: "
+	xrandr --output LVDS1 --primary --mode 1366x768 --pos 0x0 \
+		--rotate normal --output DP1 --off --output HDMI1 --mode 1600x900 \
+		--pos 1366x0 --rotate normal --output VGA1 --off --output VIRTUAL1 \
+		--off && echo "Fixed screen for dual display"
+else
+	# Script to run when $monitordev connection is not detected
+	echo "✘ No $monitordev connection detected"
+	xrandr --output LVDS1 --primary --mode 1366x768 --pos 0x0 --rotate normal \
+		--output DP1 --off --output HDMI1 --off --output VGA1 --off \
+		--output VIRTUAL1 --off
+
+fi
+
+if [ -n "$mousedetect" ]
+then
+	# Script to run when $mousedev connection is detected
+	echo "✔ $mousedev connection detected: "
+	xinputdmenu "$mousedev" "$mousepropname" "$mousepropvalue" \
+		&& echo "Set $mousedev's $mousepropname to $mousepropvalue"
+else
+	# Script to run when $mousedev connection is not detected
+	echo "✘ No $mousedev connection detected"
+fi
+
+if [ -n "$touchpaddetect" ]
+then
+	# Script to run when $touchpaddev is detected
+	echo "✔ $touchpaddev detected: "
+	xinputdmenu "$touchpaddev" "$touchpadpropname" "$touchpadpropvalue" \
+		&& echo "Set $touchpaddev's $touchpadpropname to $touchpadpropvalue"
+	xinputdmenu "$touchpaddev" "$touchpadpropname2" "$touchpadpropvalue2" \
+		&& echo "Set $touchpaddev's $touchpadpropname2 to $touchpadpropvalue2"
+	xinputdmenu "$touchpaddev" "$touchpadpropname3" "$touchpadpropvalue3" \
+		&& echo "Set $touchpaddev's $touchpadpropname3 to $touchpadpropvalue3"
+else
+	# Script to run when $touchpaddev is not detected
+	echo "✘ No $touchpaddev detected"
+fi

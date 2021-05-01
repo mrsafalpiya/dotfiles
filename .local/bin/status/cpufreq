@@ -1,0 +1,5 @@
+#!/bin/sh
+
+freq=$(lscpu | grep "CPU MHz:" | grep -o "[0-9]*" | head -n 1)
+
+printf "💻 %4s MHz " $freq
