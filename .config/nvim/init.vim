@@ -14,6 +14,8 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'andymass/vim-matchup'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'vimwiki/vimwiki'
+Plug 'chrisbra/Colorizer'
+Plug 'junegunn/goyo.vim'
 
 Plug 'mattn/emmet-vim'
 let g:user_emmet_leader_key='<C-Q>'

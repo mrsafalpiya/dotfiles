@@ -4,6 +4,9 @@ set number
 " Enable relative number line
 set relativenumber
 
+" Natural sort of (version) numbers within text.
+set sortnumbers
+
 " Use Vim's format of help file (Enables help for specific commands)
 set vimhelp
 
