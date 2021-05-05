@@ -6,7 +6,7 @@ id="$(xinput list | grep -Eio 'touchpad.*id=[0-9]*' | grep -Eo '[0-9]*')"
 
 togtpad() {
 	# Find out if the TouchPad is enabled or disabled
-	mode="$(xinput --list-props 16 | grep 'Device Enabled' | grep -Eo '):.*[0|1]' | grep -Eo '[0|1]')"
+	mode="$(xinput --list-props $id | grep 'Device Enabled' | grep -Eo '):.*[0|1]' | grep -Eo '[0|1]')"
 
 	# If TouchPad is enabled, disable it else enable it
 	[ "$mode" -eq "1" ] && (xinput set-prop "$id" "Device Enabled" 0
