@@ -83,11 +83,6 @@ alias \
 # |  _|  / /_|  _|
 # |_|   /____|_|
 
-__fzfcmd() {
-	[ -n "$TMUX_PANE" ] && { [ "${FZF_TMUX:-0}" != 0 ] || [ -n "$FZF_TMUX_OPTS" ]; } &&
-		echo "fzf-tmux ${FZF_TMUX_OPTS:--d${FZF_TMUX_HEIGHT:-40%}} -- " || echo "fzf"
-	}
-
 __fzf_history__() {
 	local output
 	output=$(
@@ -103,10 +98,10 @@ __fzf_history__() {
 			fi
 		}
 
-__fzf_file__() {
-	ls -1a | fzf -m --height 40% --print0
+__fzf_files__() {
+	ls -1a | fzf -m --height 40% | tr '\r\n' ' ' | xclip -selection clipboard
 }
-cd_with_fzf() {
+__cd_with_fzf__() {
 	cd "$(fd -E go/ -E newwin32 -t d | fzf --preview="tree -L 1 {}" --preview-window=:hidden)" && echo "$PWD"
 }
 
@@ -115,9 +110,9 @@ bind -m vi-command -x '"\C-r": __fzf_history__'
 bind -m vi-insert -x '"\C-r": __fzf_history__'
 
 # CTRL+F - Paste the file/folder name from current directory
-bind -m vi-command -x '"\C-f": __fzf_file__'
-bind -m vi-insert -x '"\C-f": __fzf_file__'
+bind -m vi-command -x '"\C-f": __fzf_files__'
+bind -m vi-insert -x '"\C-f": __fzf_files__'
 
 # CTRL+Q - cd with fzf
-bind -m vi-command -x '"\C-q": cd_with_fzf'
-bind -m vi-insert -x '"\C-q": cd_with_fzf'
+bind -m vi-command -x '"\C-q": __cd_with_fzf__'
+bind -m vi-insert -x '"\C-q": __cd_with_fzf__'
