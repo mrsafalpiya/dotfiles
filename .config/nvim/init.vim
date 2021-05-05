@@ -172,3 +172,9 @@ for _, lsp in ipairs(servers) do
 	nvim_lsp[lsp].setup { on_attach = on_attach }
 end
 eof
+
+" Note taking
+command Topdf !pandoc --pdf-engine=xelatex -o "%:p:h/%:t:r.pdf" "%:p:h/%:t" &
+command Openpdf !xdg-open "%:p:h/%:t:r.pdf" &
+autocmd FileType vimwiki,markdown nnoremap <buffer> <leader>tp :silent Topdf<CR>
+autocmd FileType vimwiki,markdown nnoremap <buffer> <leader>op :silent Openpdf<CR>

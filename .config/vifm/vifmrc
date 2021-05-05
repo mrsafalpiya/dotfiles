@@ -44,7 +44,7 @@ set suggestoptions=normal,visual,view,otherpane,keys,marks,registers
 set statusline="  %t%= %A %10u:%-7g %15E %20d  "
 
 " Open all other files with default system programs
-filetype * st -e xdg-open %f &
+filetype * st -e xdg-open %f %i &
 
 " Don't do too many requests to slow file systems
 if !has('win')
