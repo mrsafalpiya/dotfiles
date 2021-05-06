@@ -41,6 +41,9 @@ stty -ixon
 # Better cd with spelling awareness
 shopt -s cdspell
 
+# Sets auto completion to ignore case
+bind "set completion-ignore-case on"
+
 # Enable vi-mode
 set -o vi
 
