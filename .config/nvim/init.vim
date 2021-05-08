@@ -3,6 +3,8 @@ let g:mapleader = "\<Space>"
 
 call plug#begin('~/.config/nvim/autoload/plugged')
 
+Plug 'mrsafalpiya/base16-vim'
+
 Plug 'lukas-reineke/indent-blankline.nvim', { 'branch': 'lua' }
 let g:indent_blankline_enabled = v:false
 let g:indent_blankline_char = '▏'
@@ -42,6 +44,10 @@ let g:go_highlight_build_constraints = 1
 let g:go_highlight_diagnostic_errors = 1
 let g:go_highlight_diagnostic_warnings = 1
 
+Plug 'rust-lang/rust.vim'
+let g:rust_recommended_style = 0
+let g:rustfmt_autosave = 1
+
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
 set completeopt=menuone,noselect,preview,noinsert,noselect
@@ -70,8 +76,8 @@ autocmd FileType * setlocal formatoptions-=cro
 set mouse=a
 
 " Indentation
-set shiftwidth=5
-set tabstop=5
+set shiftwidth=4
+set tabstop=4
 set smartindent
 
 " Appearance
@@ -85,6 +91,9 @@ set guicursor=a:block
 set shortmess-=S
 set list
 set listchars=eol:¬,tab:\ \ ,nbsp:·,trail:·,extends:…,precedes:…
+
+set termguicolors
+colorscheme base16-default-dark
 
 " Jump to guide character
 nmap <Space><Space> <Esc>/<++><Enter>"_c4l
@@ -167,7 +176,7 @@ end
 
 -- use a loop to conveniently both setup defined servers 
 -- and map buffer local keybindings when the language server attaches
-local servers = { "clangd", "gopls", "tsserver", "html", "pyls" }
+local servers = { "clangd", "gopls", "tsserver", "html", "pyls", "rust_analyzer" }
 for _, lsp in ipairs(servers) do
 	nvim_lsp[lsp].setup { on_attach = on_attach }
 end
