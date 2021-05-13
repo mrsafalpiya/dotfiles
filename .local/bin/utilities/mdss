@@ -1,0 +1,34 @@
+#!/bin/sh
+# exit when any command fails
+set -e
+
+# default config file location
+config_loc=$HOME/.config/mdss-loc
+
+# set the location of ss to save
+if [ ! -z "$1" ]
+then
+	ss_loc=$1
+else
+	if [ -s "$config_loc" ]
+	then
+		ss_loc=$(cat "$config_loc" | tr -d '\n')
+	else
+		echo "error: neither folder argument is passed nor $HOME/.config/mdss-loc file exist!"
+		exit 1
+	fi
+fi
+
+# make the $ss_loc folder just in case
+mkdir -p "$ss_loc"
+echo "Saving into $ss_loc"
+
+# ask for file name
+ss_name=$(dmenu -p "Enter the name of ss (saving into $ss_loc):" <&-)
+fullpath="$ss_loc"/"$ss_name".png
+
+# actual flameshot instance
+flameshot gui -r > "$fullpath"
+
+# copy the proper markdown picture format
+echo -n "!["$ss_name"]("$fullpath")" | xclip -selection clipboard
