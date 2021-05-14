@@ -55,6 +55,7 @@ endif
 
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
+Plug 'hrsh7th/vim-vsnip'
 set completeopt=menuone,noselect,preview,noinsert,noselect
 let g:compe = {}
 let g:compe.preselect = 'disable'
@@ -62,9 +63,11 @@ let g:compe.source = {}
 let g:compe.source.path = v:true
 let g:compe.source.buffer = v:true
 let g:compe.source.nvim_lsp = v:true
+let g:compe.source.latex_symbols = v:true
 inoremap <silent><expr> <C-Space> compe#complete()
 inoremap <silent><expr> <C-y>     compe#confirm('<CR>')
-Plug 'norcalli/snippets.nvim'
+Plug 'GoldsteinE/compe-latex-symbols'
+autocmd FileType markdown let b:compe_latex_insert_code = v:true
 
 call plug#end()
 
