@@ -55,6 +55,7 @@ endif
 
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
+Plug 'ray-x/lsp_signature.nvim'
 Plug 'hrsh7th/vim-vsnip'
 set completeopt=menuone,noselect,preview,noinsert,noselect
 let g:compe = {}
@@ -82,6 +83,9 @@ set clipboard=unnamed
 set undofile
 autocmd FileType * setlocal formatoptions-=cro
 set mouse=a
+set inccommand=split
+set switchbuf=usetab
+set visualbell t_vb=
 
 " Indentation
 set shiftwidth=4
@@ -98,7 +102,8 @@ set signcolumn=number
 set guicursor=a:block
 set shortmess-=S
 set list
-set listchars=eol:¬,tab:\ \ ,nbsp:·,trail:·,extends:…,precedes:…
+set listchars=eol:¬,tab:»·,nbsp:·,trail:·,extends:…,precedes:…
+set colorcolumn=80
 
 set termguicolors
 colorscheme base16-default-dark
@@ -148,6 +153,7 @@ augroup END
 lua << EOF
 local nvim_lsp = require('lspconfig')
 local on_attach = function(client, bufnr)
+	require'lsp_signature'.on_attach()
 	local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
 	local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -156,7 +162,6 @@ local on_attach = function(client, bufnr)
 	buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
 	buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
 	buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-	buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
 	buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
 	buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
 	buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
@@ -197,14 +202,16 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
 
 -- Use a loop to conveniently both setup defined servers 
 -- and map buffer local keybindings when the language server attaches
-local servers = { "clangd", "gopls", "tsserver", "html", "pyls", "rust_analyzer" }
+local servers = { "clangd", "gopls", "tsserver", "html", "cssls", "pyls", "rust_analyzer" }
 for _, lsp in ipairs(servers) do
 	nvim_lsp[lsp].setup { on_attach = on_attach, capabilities = capabilities }
 end
 EOF
 
-" Note taking
-command Topdf !pandoc --pdf-engine=xelatex -o "%:p:h/%:t:r.pdf" "%:p:h/%:t" &
+" Markdown
+command Topdf !pandoc -o "%:p:h/%:t:r.pdf" "%:p:h/%:t"
 command Openpdf !xdg-open "%:p:h/%:t:r.pdf" &
-autocmd FileType vimwiki,markdown nnoremap <buffer> <leader>tp :silent Topdf<CR>
+autocmd FileType vimwiki,markdown setlocal colorcolumn=0
+autocmd FileType vimwiki,markdown setlocal listchars=eol:¬,tab:\ \ ,nbsp:·,trail:·,extends:…,precedes:…
+autocmd FileType vimwiki,markdown nnoremap <buffer> <leader>tp :Topdf<CR>
 autocmd FileType vimwiki,markdown nnoremap <buffer> <leader>op :silent Openpdf<CR>
