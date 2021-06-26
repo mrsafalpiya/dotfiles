@@ -33,7 +33,7 @@ export WM="dwm"
 [[ $- != *i* ]] && return
 
 # PS1 Configuration
-PS1="\[\033[38;5;10m\]\W\[$(tput sgr0)\] \\$ \[$(tput sgr0)\]\[\e]2;\w\a\]"
+PS1="\[\033[38;5;10m\]\w\[$(tput sgr0)\] \\$ \[$(tput sgr0)\]\[\e]2;\w\a\]"
 
 # Disable ctrl-s and ctrl-q
 stty -ixon
@@ -110,7 +110,7 @@ __fzf_files__() {
 	ls -1a | fzf -m --height 40% | tr '\r\n' ' ' | xclip -selection clipboard
 }
 __cd_with_fzf__() {
-	cd "$(fd -E go/ -E newwin32 -t d | fzf --preview="tree -L 1 {}" --preview-window=:hidden)" && echo "$PWD"
+	cd "$(fd -t d | fzf --preview="tree -L 1 {}" --preview-window=:hidden)" && echo "$PWD"
 }
 
 # CTRL+R - Paste the selected command from history into the command line

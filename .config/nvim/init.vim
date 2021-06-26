@@ -57,6 +57,9 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'hrsh7th/vim-vsnip'
+imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
+smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
+
 set completeopt=menuone,noselect,preview,noinsert,noselect
 let g:compe = {}
 let g:compe.preselect = 'disable'
@@ -209,8 +212,8 @@ end
 EOF
 
 " Markdown
-command Topdf !pandoc -o "%:p:h/%:t:r.pdf" "%:p:h/%:t"
-command Openpdf !xdg-open "%:p:h/%:t:r.pdf" &
+command PdfConvert !pandoc -o "%:p:h/%:t:r.pdf" "%:p:h/%:t"
+command PdfOpen !xdg-open "%:p:h/%:t:r.pdf" &
 autocmd FileType vimwiki,markdown setlocal colorcolumn=0
 autocmd FileType vimwiki,markdown setlocal listchars=eol:¬,tab:\ \ ,nbsp:·,trail:·,extends:…,precedes:…
 autocmd FileType vimwiki,markdown nnoremap <buffer> <leader>tp :Topdf<CR>
