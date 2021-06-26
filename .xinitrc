@@ -5,7 +5,7 @@ udiskie -t &
 xbacklight -set 60% &
 unclutter &
 locker &
-dwmblocks &
+statusbar &
 
 # Start dwm
 exec dwm
