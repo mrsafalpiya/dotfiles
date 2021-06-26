@@ -28,7 +28,10 @@ print_ram_usage() {
 }
 
 print_frequencies() {
-	grep "MHz" /proc/cpuinfo | grep -o "[0-9]*\." | sed "s/...$//" | tr '\n' ' '
+	for freq in $(grep "MHz" /proc/cpuinfo | grep -o "[0-9]*\." | sed "s/...$//")
+	do
+		printf "%2s " $freq
+	done
 }
 
 print_cpubars() {
