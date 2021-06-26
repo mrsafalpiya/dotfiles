@@ -1,0 +1,96 @@
+#!/bin/sh
+
+print_network_traffic() {
+	# Module showing network traffic. Shows how much data has been received (RX) or
+	# transmitted (TX) since the previous time this script ran. So if run every
+	# second, gives network traffic per second.
+
+	update() {
+		sum=0
+		for arg; do
+			read -r i < "$arg"
+			sum=$(( sum + i ))
+		done
+		cache=${XDG_CACHE_HOME:-$HOME/.cache}/${1##*/}
+		[ -f "$cache" ] && read -r old < "$cache" || old=0
+		printf %d\\n "$sum" > "$cache"
+		printf %d\\n $(( sum - old ))
+	}
+
+	rx=$(update /sys/class/net/[ew]*/statistics/rx_bytes)
+	tx=$(update /sys/class/net/[ew]*/statistics/tx_bytes)
+
+	printf "%4sB %4sB\\n" $(numfmt --to=iec $rx) $(numfmt --to=iec $tx)
+}
+
+print_ram_usage() {
+	free -h | awk '/^Mem/ {print $3}'
+}
+
+print_frequencies() {
+	grep "MHz" /proc/cpuinfo | grep -o "[0-9]*\." | sed "s/...$//" | tr '\n' ' '
+}
+
+print_cpubars() {
+	# Cache in tmpfs to improve speed and reduce SSD load
+	cache=/tmp/cpubarscache
+
+	# id total idle
+	stats=$(awk '/cpu[0-9]+/ {printf "%d %d %d\n", substr($1,4), ($2 + $3 + $4 + $5), $5 }' /proc/stat)
+	[ ! -f $cache ] && echo "$stats" > "$cache"
+	old=$(cat "$cache")
+	echo "$stats" | while read -r row; do
+		id=${row%% *}
+		rest=${row#* }
+		total=${rest%% *}
+		idle=${rest##* }
+
+		case "$(echo "$old" | awk '{if ($1 == id)
+			printf "%d\n", (1 - (idle - $3)  / (total - $2))*100 /12.5}' \
+				id="$id" total="$total" idle="$idle")" in
+
+			"0") printf "▁";;
+			"1") printf "▂";;
+			"2") printf "▃";;
+			"3") printf "▄";;
+			"4") printf "▅";;
+			"5") printf "▆";;
+			"6") printf "▇";;
+			"7") printf "█";;
+			"8") printf "█";;
+		esac
+	done;
+	echo "$stats" > "$cache"
+}
+
+print_battery() {
+	# Loop through all attached batteries and format the info
+	for battery in /sys/class/power_supply/BAT?*; do
+		# If non-first battery, print a space separator.
+		[ -n "${capacity+x}" ] && printf " "
+		# Sets up the status and capacity
+		case "$(cat "$battery/status")" in
+			"Full") status="⚡" ;;
+			"Discharging") status="🔋" ;;
+			"Charging") status="🔌" ;;
+			"Not charging") status="🛑" ;;
+			"Unknown") status="♻️" ;;
+		esac
+		capacity=$(cat "$battery/capacity")
+		# Will make a warn variable if discharging and low
+		[ "$status" = "🔋" ] && [ "$capacity" -le 25 ] && warn="❗"
+		# Prints the info
+		printf "%s%s%d%%" "$status" "$warn" "$capacity"; unset warn
+	done && exit 0
+}
+
+print_date_time() {
+	nepcal d | grep -o ".*," | tr '\n' ' '
+	date "+%b-%m-%d %a %I:%M:%S%P"
+}
+
+while true;
+do
+	xsetroot -name "$(print_network_traffic) | $(print_ram_usage) | $(print_frequencies)$(print_cpubars) | $(print_battery) | $(print_date_time)"
+	sleep 1
+done
