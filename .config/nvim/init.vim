@@ -6,7 +6,7 @@ call plug#begin('~/.config/nvim/autoload/plugged')
 Plug 'mrsafalpiya/base16-vim'
 
 Plug 'sheerun/vim-polyglot'
-Plug 'lukas-reineke/indent-blankline.nvim', { 'branch': 'lua' }
+Plug 'lukas-reineke/indent-blankline.nvim'
 let g:indent_blankline_enabled = v:false
 let g:indent_blankline_char = '▏'
 Plug 'mbbill/undotree'
@@ -212,7 +212,7 @@ end
 EOF
 
 " Markdown
-command PdfConvert !pandoc -o "%:p:h/%:t:r.pdf" "%:p:h/%:t"
+command PdfConvert !pandoc --pdf-engine=xelatex -o "%:p:h/%:t:r.pdf" "%:p:h/%:t" --filter pandoc-crossref
 command PdfOpen !xdg-open "%:p:h/%:t:r.pdf" &
 autocmd FileType vimwiki,markdown setlocal colorcolumn=0
 autocmd FileType vimwiki,markdown setlocal listchars=eol:¬,tab:\ \ ,nbsp:·,trail:·,extends:…,precedes:…
