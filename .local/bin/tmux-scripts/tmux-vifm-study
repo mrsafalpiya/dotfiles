@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Set Session Name
+SESSION="vifm"
+SESSIONEXISTS=$(tmux list-sessions | grep $SESSION)
+
+# Only create tmux session if it doesn't already exist
+if [ "$SESSIONEXISTS" = "" ]
+then
+	# Start New Session with our name
+	tmux new-session -d -s $SESSION
+
+	# Name first Pane and start vifm in the correct location
+	tmux rename-window -t 0 'root'
+	tmux send-keys -t 'root' 'vifm ~/od/study/1st/ ~/od/study/1st/' C-m # C-m = Enter
+
+	# Create and setup pane for vids window
+	tmux new-window -t $SESSION:1 -n 'vids'
+	tmux send-keys -t 'vids' 'vifm ~/vids /run/media/safal/9EB41115B410F18F/videos/classes' C-m # C-m = Enter
+fi
+
+# Attach Session, on the Main window
+tmux attach-session -t $SESSION:0
