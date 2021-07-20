@@ -45,6 +45,8 @@ set undofile
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " Enable syntax omnicompletion
 set omnifunc=syntaxcomplete#Complete
+" Wrap whole word
+set linebreak
 
 " == FIX SLOWNESS ==
 " Enable ttimeout
