@@ -12,6 +12,9 @@ done
 # Adds $GOPATH folder to $PATH
 export PATH="$PATH:$HOME/go/bin"
 
+# Adds cargo bin to $PATH
+export PATH="$PATH:$HOME/.cargo/bin"
+
 # Defining programs
 export EDITOR="nvim"
 export READER="zathura"

@@ -2,7 +2,7 @@
 clipmenud &
 mpd &
 udiskie -t &
-xbacklight -set 60% &
+xbacklight -set 60 &
 unclutter &
 locker &
 statusbar &
