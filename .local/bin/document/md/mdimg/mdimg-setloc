@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# = Usage =
+
+display_usage() {
+	echo "Usage: ${0##*/} new_location"
+}
+
+[ "$1" = "-h" ] && display_usage && exit 1
+
+# = PREREQUISITES =
+
+# == Markdown directory ==
+MDLOC=$(readlink -f "$(pwd)")
+
+# == New location ==
+NEWLOC=$(readlink -f "$1")
+
+# Check if the new location argument is passed
+[ -z "$NEWLOC" ] && echo "Please pass a new location as the argument" >&2 && exit 1
+# Check if the given argument is a valid path
+[ ! -d "$NEWLOC" ] && echo "Given argument isn't a valid directory path" >&2 && exit 1
+
+# == Config file ==
+CONFIG_FILE="$HOME"/.config/quick/mdimg
+
+# = MAIN PROCESS =
+
+# Write proper content to the config file
+echo "$MDLOC" > "$CONFIG_FILE"
+echo "$NEWLOC" >> "$CONFIG_FILE"
+
+# Print out the new location to stdout
+echo "$NEWLOC"

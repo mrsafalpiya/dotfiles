@@ -1,0 +1,213 @@
+" == PLUGINS ==
+" Set leader key to space
+let g:mapleader = "\<Space>"
+" Set local leader key to comma
+let maplocalleader=","
+
+" Source plugins.vim file if plug.vim file exist
+let PlugFile = $HOME . "/.vim/autoload/plug.vim"
+if !empty(glob(PlugFile)) && !isdirectory(PlugFile)
+	call plug#begin('~/.vim/autoload/plugged')
+
+	" Colorscheme
+	Plug 'robertmeta/nofrils'
+	let g:nofrils_heavycomments=1
+	let g:nofrils_heavylinenumbers=1
+
+	" Custom settings for base16-bright
+	function! s:base16_customize() abort
+		highlight Normal guibg=NONE
+		highlight LineNr guibg=NONE
+		highlight MatchParen guibg=#525252
+	endfunction
+	augroup on_change_colorschema
+		autocmd!
+		autocmd ColorScheme base16-bright call s:base16_customize()
+	augroup END
+
+	" Improving quality of life
+	Plug 'tpope/vim-commentary'
+	Plug 'tpope/vim-surround'
+	Plug 'tpope/vim-repeat'
+	Plug 'andymass/vim-matchup'
+	" Plug 'frazrepo/vim-rainbow'
+	" let g:rainbow_active = 1
+	Plug 'mbbill/undotree'
+
+	" Frontend
+	Plug 'chrisbra/Colorizer'
+
+	" Pandoc
+	Plug 'vim-pandoc/vim-pandoc'
+	" Disable j and k bind as gj and gk
+	let g:pandoc#keyboard#display_motions = 0
+	Plug 'vim-pandoc/vim-pandoc-syntax'
+
+	" LaTeX
+	Plug 'lervag/vimtex'
+	" Disable vimtex indentation
+	let g:vimtex_indent_enabled = v:false
+	" Enable vimtex foldings
+	" let g:vimtex_fold_enabled = v:true
+	
+	" Groff
+	Plug 'Gavinok/vim-troff'
+
+	" COC
+	Plug 'neoclide/coc.nvim', {'branch': 'release', 'on': [] }
+	" Set the config directory to ~/.vim
+	let g:coc_config_home = "~/.vim"
+	" Enable coc plugin only on <leader>c
+	nnoremap <leader>c :call plug#load('coc.nvim') \| source ~/.vim/coc.vim<CR>
+
+	" C
+	" Improved syntax highlighting
+	Plug 'bfrg/vim-cpp-modern'
+	Plug 'rhysd/vim-clang-format'
+	let g:clang_format#style_options = {
+				\ "BasedOnStyle": "LLVM",
+				\ "TabWidth": 4,
+				\ "UseTab": "Always",
+				\ "BreakBeforeBraces": "Linux",
+				\ "AllowShortIfStatementsOnASingleLine": "false",
+				\ "IndentCaseLabels": "false",
+				\ "AlwaysBreakAfterReturnType": "AllDefinitions"}
+
+	call plug#end()
+endif
+
+" For vim only
+if !has('nvim')
+	" == CORE FUNCTIONALITIES ==
+	" Enable filetype plugin and indentation settings
+	filetype plugin on
+	" Enable syntax highlighting
+	syntax on
+	" Enable changing buffers without saving current
+	set hidden
+	" Enable wildmenu
+	set wildmenu
+
+	" == SEARCHING ==
+	" Search as you type
+	set incsearch
+	" Highlight search matches
+	set hlsearch
+	" Enable search count message
+	set shortmess-=S
+
+	" == INDENTATION ==
+	" Automatically indent new line as previous
+	set autoindent
+
+	" Fix `set termguicolors` for st
+	let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+	let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+endif
+
+" For neovim only
+if has('nvim')
+	" == APPEARANCE ==
+	" Enable title
+	set title
+	" Set cursor to block at all time
+	set guicursor=a:block
+	" Disable statusline
+	set laststatus=0
+
+	" == HACKS ==
+	" Highlight yanked text
+	augroup highlight_yank
+		autocmd!
+		au TextYankPost * silent! lua vim.highlight.on_yank { higroup='IncSearch', timeout=400 }
+	augroup END
+endif
+
+" == CORE FUNCTIONALITIES ==
+" Set path to current directory along with sub directories
+set path=.,**
+" Set clipboard to primary selection
+set clipboard=unnamed
+" Enable undofile
+set undofile
+" Disable new line commenting
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+" Case in-sensitive wildmenu selection
+set wildignorecase
+" Don't offer to open certain files/directories
+set wildignore+=node_modules/*,bower_components/*,.git/*
+" Lazily redraw screen while executing macros, registers etc
+set lazyredraw
+" Case in-sensitive search
+set ignorecase
+" Smart case sensitive search
+set smartcase
+" Case in-sensitive insert-completion
+set infercase
+
+" == APPEARANCE ==
+" Enable numbering
+set number
+" Enable relative numbering
+set relativenumber
+" Enable list
+set list
+" Better listchars
+set listchars=tab:🢒\ ,lead:·,trail:·,extends:→,precedes:←,nbsp:⦸
+set showbreak=\ ↳\ 
+" Draw line at 80th column
+set colorcolumn=80
+" Wrap whole word
+set linebreak
+" Draw sign column replacing the line number itself
+set signcolumn=number
+" Set textwidth to 80
+set textwidth=80
+" Set background to dark
+set background=dark
+" Enable guicolors
+set termguicolors
+" Colorscheme
+colorscheme sp-plain
+
+" == INDENTATION ==
+" Disable any filetype indentations
+filetype indent off
+
+" == HACKS ==
+" Set omnifunction to syntax completion
+set omnifunc=syntaxcomplete#Complete
+" Jump to guide character
+nmap <Space><Space> <Esc>/<++><Enter>:noh<CR>"_c4l
+" Clear search highlights
+nnoremap <leader>n :noh<CR>
+" Run make in shell
+nnoremap <leader>m :!make<CR>
+" Remove trailing whitespaces on pressing F5
+nnoremap <silent> <F5> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+
+" == VIM ==
+" Get highlight group
+function! SynGroup()
+	let l:s = synID(line('.'), col('.'), 1)
+	echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
+endfun
+
+nnoremap <F2> :call SynGroup()<CR>
+
+" == MARKDOWN ==
+" Source custom answer finding script
+source ~/.vim/mdanswers.vim
+
+" == LaTeX ==
+" Set default tex flavor detection to latex
+let g:tex_flavor = "latex"
+" Disable indentation of continuation lines after \item
+let g:tex_indent_items = v:false
+
+" == WRITING ==
+" Custom keybinds for pdfcompile and pdfcompileopen
+autocmd FileType vimwiki,markdown,rmarkdown,troff,tex nnoremap <buffer> <leader>tp :!pdfcompile %<CR>
+autocmd FileType vimwiki,markdown,rmarkdown,troff,tex nnoremap <buffer> <leader>op :silent !setsid -f pdfcompileopen %<CR>
+" Enable spell checking by default
+autocmd FileType vimwiki,markdown,rmarkdown,troff,tex set spell

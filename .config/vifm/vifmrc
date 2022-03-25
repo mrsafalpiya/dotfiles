@@ -1,0 +1,140 @@
+" Enable number line
+set number
+
+" Enable relative number line
+set relativenumber
+
+" Natural sort of (version) numbers within text.
+set sortnumbers
+
+" Use Vim's format of help file (Enables help for specific commands)
+set vimhelp
+
+" Enable title change when changing directories
+set title
+
+" Command used to edit files in various contexts
+set vicmd=nvim
+
+" Perform file operations on its own
+set syscalls
+
+" Show list of matches on tab completion in command-line mode
+set wildmenu
+
+" Display completions in a form of popup with descriptions of the matches
+set wildstyle=popup
+
+" Ignore case in search patterns unless it contains at least one uppercase
+" letter
+set ignorecase
+set smartcase
+
+" Use increment searching (search while typing)
+set incsearch
+
+" Enable register sharing among instances of vifm
+set syncregs=general
+
+" Display suggestions in normal, visual and view modes for keys, marks and
+" registers (at most 5 files).  In other view, when available.
+set suggestoptions=normal,visual,view,otherpane,keys,marks,registers
+
+" Set statusline to total size of selected files
+set statusline="  %t%= %A %10u:%-7g %15E %20d  "
+
+" Sort 
+
+" Open all other files with default system programs
+filetype * op %f
+
+" Open terminal in current directory
+nnoremap ,t :!st &<cr>
+
+" Don't do too many requests to slow file systems
+if !has('win')
+	set slowfs=curlftpfs
+endif
+
+" Toggle visibility of preview window
+nnoremap w :view<cr>
+vnoremap w :view<cr>gv
+
+" Mappings for faster renaming
+nnoremap I cw<c-a>
+nnoremap cc cw<c-u>
+nnoremap A cw
+
+" Interaction with system clipboard
+if has('win')
+	" Yank current directory path to Windows clipboard with forward slashes
+	nnoremap yp :!echo %"d:gs!\!/! %i | clip<cr>
+	" Yank path to current file to Windows clipboard with forward slashes
+	nnoremap yf :!echo %"c:gs!\!/! %i | clip<cr>
+elseif executable('xclip')
+	" Yank current directory path into the clipboard
+	nnoremap yd :!echo %d | xclip %i<cr>
+	" Yank current file path into the clipboard
+	nnoremap yf :!echo %c:p | xclip %i<cr>
+elseif executable('xsel')
+	" Yank current directory path into primary and selection clipboards
+	nnoremap yd :!echo -n %d | xsel --input --primary %i &&
+				\ echo -n %d | xsel --clipboard --input %i<cr>
+	" Yank current file path into into primary and selection clipboards
+	nnoremap yf :!echo -n %c:p | xsel --input --primary %i &&
+				\ echo -n %c:p | xsel --clipboard --input %i<cr>
+endif
+
+" Directories mark
+mark l ~/.local/bin
+
+" QuickCD
+command! QuickCD : let $QCD_PICK = term('quickcd stdout 2> /dev/tty')
+			\|if $QCD_PICK != ''
+				\|	execute system('[ -f "$QCD_PICK" ] && echo goto || echo cd') fnameescape($QCD_PICK)
+				\|endif
+nnoremap <c-q> :QuickCD<cr>
+
+" Enable dragon support
+command! dragon dragon-drag-and-drop -a -x %f
+map <M-d> :dragon<CR>
+
+" Toggle visibility of preview window
+nnoremap w :view<cr>
+vnoremap w :view<cr>gv
+
+" Multimedia preview
+fileviewer *.pdf
+			\ vifmimg pdf %px %py %pw %ph %c
+			\ %pc
+			\ vifmimg clear
+
+fileviewer *.djvu
+			\ vifmimg djvu %px %py %pw %ph %c
+			\ %pc
+			\ vifmimg clear
+
+fileviewer *.epub
+			\ vifmimg epub %px %py %pw %ph %c
+			\ %pc
+			\ vifmimg clear
+
+fileviewer <video/*>
+			\ vifmimg video %px %py %pw %ph %c
+			\ %pc
+			\ vifmimg clear
+
+fileviewer <image/*>
+			\ vifmimg draw %px %py %pw %ph %c
+			\ %pc
+			\ vifmimg clear
+
+fileviewer <audio/*>
+			\ vifmimg audio %px %py %pw %ph %c
+			\ %pc
+			\ vifmimg clear
+
+fileviewer <font/*>
+			\ vifmimg font %px %py %pw %ph %c
+			\ %pc
+			\ vifmimg clear

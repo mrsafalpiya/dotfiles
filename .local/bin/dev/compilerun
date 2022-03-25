@@ -1,0 +1,10 @@
+#!/bin/sh
+
+file=$(readlink -f "$1")
+base="${file%.*}"
+ext="${file##*.}"
+
+case "$ext" in
+	c) gcc "$file" -o "$base" && "$base" ;;
+	cpp) g++ "$file" -o "$base" && "$base" ;;
+esac

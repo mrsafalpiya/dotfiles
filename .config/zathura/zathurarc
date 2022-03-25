@@ -1,0 +1,9 @@
+# Try to open the source file of the pdf
+map <C-e> exec 'pdfedit "$FILE"'
+
+# Open a terminal instance in the directory of the file
+# map <C-s> exec 'st -d "$FILE"'
+map ,t exec 'pdfdirterm "$FILE"'
+
+# Open a dragon-drag-and-drop on the file
+map <M-d> exec 'dragon-drag-and-drop "$FILE"'

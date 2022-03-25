@@ -1,0 +1,11 @@
+#!/bin/sh
+
+script_name=$1
+
+# Exit if no script name is provided
+[ -z "$script_name" ] && echo "ERROR: No script name is defined" && exit 1
+
+# Check if the file with the same script name already exist
+[ -e "$script_name" ] && echo "ERROR: File with the name $script_name already exists!" && exit 1
+
+printf "#!/bin/sh\n\n" > "$script_name" && chmod +x "$script_name" && $EDITOR "$script_name"

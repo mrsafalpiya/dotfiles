@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# exit when any command fails
+set -e
+
+# = Usage =
+
+display_usage() {
+	echo "Usage: ${0##*/} input_file output_base_name [image_description]"
+}
+
+[ "$1" = "-h" ] && display_usage && exit 1
+
+# = PREREQUISITES =
+
+# == Config file ==
+CONFIG_FILE="$HOME"/.config/quick/mdimg
+
+# Check if the config file exist
+[ ! -f "$CONFIG_FILE" ] && echo "Config file doesn't exist" >&2 && exit 1
+
+# == Output location ==
+OUT_LOC="$(tail -n 1 "$CONFIG_FILE")"
+
+# Check if the output location in the config file is valid
+[ ! -d "$OUT_LOC" ] && echo "Given location in the config file isn't a valid directory path" >&2 && exit 1
+
+# = MAIN PROCESS =
+
+# Flameshot instance
+flameshot gui -r > /tmp/mdimgtemp.png
+
+# Ask for file name and image description
+OUT_NAME=$(ls "$OUT_LOC" | sed 's/.png$//' | dmenu -l 5 -p "Image filename:")
+IMG_DESC=$(dmenu -p "Image description:" <&-)
+
+lateximg-file "/tmp/mdimgtemp.png" "$OUT_NAME" "$IMG_DESC"

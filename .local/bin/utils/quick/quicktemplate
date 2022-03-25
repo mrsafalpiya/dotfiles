@@ -1,0 +1,39 @@
+#!/bin/sh
+
+CONFIG_FILE="$HOME"/.config/quick/template
+
+# Get the selection from user
+selection=$(sed -n '/^[^[:space:]]/s/:.*//p' "$CONFIG_FILE" | fzf)
+
+# Get the flags
+flags_raw=$(grep "^$selection" "$CONFIG_FILE")
+
+# Get individual flags
+IFS=":"
+for flag in $flags_raw; do
+	# Remove leading and trailing whitespaces
+	flag=$(echo "$flag" | xargs)
+	[ -z "$flags" ] && flags="$flag" || flags="$flags|$flag"
+done
+
+vars=$(echo "$flags" | cut -d'|' -f2)
+root_dir=$(echo "$flags" | cut -d'|' -f3)
+
+# Getting the subentries value
+# TODO: Not triming whitespaces may create problem later!
+subentries=$(sed -n "/^$selection/,/^[^[:space:]]/p" "$CONFIG_FILE" | sed -n -e "/^$/d" -e "/^[^[:space:]]/d" -e "s/^[[:space:]]\+//p")
+
+echo "$subentries"
+
+# Loop through each vars
+IFS=","
+for var in $vars; do
+	# Remove leading and trailing whitespaces
+	var=$(echo "$var" | xargs)
+	# Get the variable value from the user
+	read -p "$var? " var_value
+	# Substitute the values of variables in the sub-entries
+	subentries=$(echo "$subentries" | sed "s/{{$var}}/$var_value/g")
+done
+
+echo "$subentries"

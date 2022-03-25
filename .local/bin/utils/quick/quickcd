@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# Reads the file at "$HOME"/.config/quick/cd
+# Which should be of the following template:
+#	Local bin		~/.local/bin/
+#	Music			~/multimedia/music/
+#	Screenshots		"$(xdg-user-dir PICTURES)"/ss
+
+CONFIG_FILE="$HOME"/.config/quick/cd
+
+# Check if the config file doesn't exist
+[ ! -e "$CONFIG_FILE" ] && echo "$CONFIG_FILE doesn't exist!" >&2 && exit
+
+# Get the folder to cd to using fzf:
+# First replace multiple \t into one \t
+# Then remove comments
+# Then remove any trailing whitespaces
+# Then remove empty lines
+# Then replace ~ with "$HOME"
+# Pass it to fzf
+# And finally get the second delimiter
+LOC=$(tr -s '\t' '\t' < "$CONFIG_FILE" | sed -e 's/#.*//' -e 's/[[:space:]]*$//' -e '/^$/d' -e 's/~/"$HOME"/' | \
+	fzf --tac --delimiter='\t' --with-nth=1 \
+	--preview='echo -e "$(eval "tree -L 1 {2}")"' | cut -f2)
+
+# Check if any argument is passed
+# (Which will only print out the directory name)
+[ -n "$1" ] && echo $(eval echo "$LOC") && exit
+
+# Check if the LOC variable is empty
+# And cd only if it is not empty
+[ -n "$LOC" ] && cd "$(eval echo "$LOC")"

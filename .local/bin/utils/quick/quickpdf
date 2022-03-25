@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# Exit if any command fails
+set -e
+
+CONFIG_FILE="$HOME/.config/quick/pdf"
+
+# If -s option is passed, read from stdin
+[ "$1" = "-s" ] && INPUT=$(cat /dev/stdin) || INPUT=$(cat "$CONFIG_FILE")
+
+# Capture only those lines who doesn't start with a tab character
+# Then Remove any characters after ':' leaving only the entry name
+selection=$(echo "$INPUT" | sed -n '/^[^[:space:]]/s/:.*//p' | dmenu -i)
+
+[ -z "$selection" ] && exit
+
+# Get the flag of the selected entry
+selection_flag=$(echo "$INPUT" | sed -n -e "/^$selection/s/^.*:[[:space:]]*//p")
+
+# Check if the selection_flag is empty
+if [ -z "$selection_flag" ]; then
+	# Get the sub entries
+	subentries=$(echo "$INPUT" | sed -n "/^$selection/,/^[^[:space:]]/p" | sed -n -e "/^$/d" -e "/^[^[:space:]]/d" -e "s/^[[:space:]]\+//p")
+	echo "$subentries" | "$0" -s
+	exit
+fi
+
+if [ -d "$selection_flag" ]; then
+	# If the flag is a directory
+	xdg-open "$(find "$selection_flag" -name '*.pdf' | dmenu -l 5)"
+elif [ -f "$selection_flag" ]; then
+	# If the flag is a file
+	xdg-open "$selection_flag"
+else
+	# If the flag is a neither a file nor a folder
+	notify-send "Invalid file path!" "$selection_flag"
+fi

@@ -1,0 +1,2 @@
+# Show notification on song change
+execute_on_song_change = dunstify -t 2000 -r 1 "Now Playing" "$(mpc --format '%title% \n%artist% - %album%' current)"

@@ -1,0 +1,9 @@
+# Set link colors to yellow
+anchor_color yellow
+
+# Disable images
+display_image 0
+
+# Set external browser to xclip
+# i.e. press M to copy current link
+extbrowser sh -c 'printf %s "$0" | xclip -selection clipboard'

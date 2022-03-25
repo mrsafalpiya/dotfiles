@@ -1,0 +1,6 @@
+LaTeX Report: sub, topic: /home/safal/OneDrive/latex/template/report/
+	Makefile: Makefile
+	Main LaTeX file: {{sub}}-{{topic}}.tex
+Markdown Note: sub, topic: /home/safal/OneDrive/pandoc/template/
+	Makefile: Makefile
+	Markdown file: {{sub}}-{{topic}}.md

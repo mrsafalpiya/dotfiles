@@ -1,0 +1,79 @@
+# = VOLUME =
+# Change volume
+alt + ctrl + {minus,equal}
+	pamixer --allow-boost -{d,i} 5; dunstify -t 1000 -r 2 "VOL: $(pamixer --get-volume-human)"
+# Toggle mute
+alt + ctrl + BackSpace
+	pamixer -t; dunstify -r 2 "VOL: $(pamixer --get-volume-human)"
+
+# = SCREEN =
+# Change brightness
+alt + shift + {minus,equal}
+	xbacklight -{dec,inc} 5; dunstify -r 3 "BRIGHT: $(xbacklight -get)"
+
+# = AUDIO =
+# Toggle pause
+alt + ctrl + p
+	mpc toggle
+# Stop track
+alt + shift + p
+	mpc stop
+# Changes to next/previous tracks
+alt + ctrl + {comma,period}
+	mpc {prev,next}
+
+# = UTILITIES =
+# Unicode picker
+super + semicolon
+	dmenuunicode
+# Screenshot to clipboard
+Print
+	flameshot screen -c
+# Screenshot to Pictures
+super + Print
+	mkdir -p "$(xdg-user-dir PICTURES)"/ss; flameshot screen -p "$(xdg-user-dir PICTURES)"/ss/
+# Screenshot gui
+super + shift + s
+	flameshot gui
+# Color picker
+super + ctrl + c
+	COL=$(xcolor) && echo $COL | xclip -r -selection clipboard && notify-send "$COL"
+
+# = ETC =
+# Browser
+super + w
+	$BROWSER --use-gl=desktop --enable-features=VaapiVideoDecoder
+# ncmpcpp
+alt + ctrl + m
+	st -c ncmpcppterm -e ncmpcpp
+# Clipmenu
+super + v
+	clipmenu -i
+# Lock screen
+alt + ctrl + l
+	lock
+
+# = XF86 KEYS =
+XF86TouchpadToggle
+	toggletouchpad
+XF86Touchpad{Off,On}
+	toggletouchpad {on,off}
+XF86MonBrightnessDown
+	xbacklight -dec 5
+XF86MonBrightnessUp
+	xbacklight -inc 5
+XF86AudioMute
+	amixer sset Master toggle; pkill -RTMIN+10 blocks
+XF86Audio{Raise,Lower}Volume
+	amixer sset Master 5%{+,-}; pkill -RTMIN+10 blocks
+XF86Audio{Next,Prev}
+	mpc {next,prev}
+XF86Audio{Pause,Play,Stop}
+	mpc {pause,toggle,stop}
+XF86Audio{Rewind,Forward}
+	mpc seek {-,+}10
+
+# = EXTRA SCRIPTS =
+# quickpdf
+alt + ctrl + q
+	quickpdf

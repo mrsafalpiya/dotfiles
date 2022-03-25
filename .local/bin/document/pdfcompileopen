@@ -1,0 +1,13 @@
+#!/bin/sh
+
+file=$(readlink -f "$1")
+dir=${file%/*}
+base="${file%.*}"
+basename="${file##*/}"
+basename="${basename%.*}"
+
+loc="$base".pdf
+[ -f "$loc" ] && xdg-open "$loc"
+
+loc="$dir"/pdf-outputs/"$basename".pdf
+[ -f "$loc" ] && xdg-open "$loc"

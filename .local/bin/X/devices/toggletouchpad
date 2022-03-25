@@ -1,0 +1,26 @@
+#!/bin/sh
+# Script to toggle laptop touchpad
+
+# Find out the device id of TouchPad
+id="$(xinput list | grep -Eio 'touchpad.*id=[0-9]*' | grep -Eo '[0-9]*')"
+
+togtpad() {
+	# Find out if the TouchPad is enabled or disabled
+	mode="$(xinput --list-props $id | grep 'Device Enabled' | grep -Eo '):.*[0|1]' | grep -Eo '[0|1]')"
+
+	# If TouchPad is enabled, disable it else enable it
+	[ "$mode" -eq "1" ] && (xinput set-prop "$id" "Device Enabled" 0
+	notify-send "Touchpad" "Touchpad has been disabled") || (xinput set-prop "$id" "Device Enabled" 1
+	notify-send "Touchpad" "Touchpad has been enabled")
+}
+
+# If $1 is 'on', turn on the touchpad elseif $1 is 'off', turn off the touchpad else toggle touchpad
+if [ "$1" = "on" ]; then
+	xinput set-prop "$id" "Device Enabled" 1
+	notify-send "Touchpad" "Touchpad has been enabled"
+elif [ "$1" = "off" ]; then
+	xinput set-prop "$id" "Device Enabled" 0
+	notify-send "Touchpad" "Touchpad has been disabled"
+else
+	togtpad
+fi

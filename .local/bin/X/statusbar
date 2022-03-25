@@ -1,0 +1,5 @@
+#!/bin/sh
+while true; do
+	xsetroot -name "(☞ﾟヮﾟ)☞ Never gonna give you up $( date +"%I:%M%p" )"
+	sleep 1m
+done &

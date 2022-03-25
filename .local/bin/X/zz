@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Custom suspend script
+lock &
+sleep 1
+zzz

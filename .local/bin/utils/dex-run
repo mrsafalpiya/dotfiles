@@ -1,0 +1,5 @@
+#!/bin/sh
+
+inputFile=$(ls ~/.local/share/applications/playonlinux-* | dmenu -p "Select a .desktop file to run" -l 5 -i)
+
+echo \"$inputFile\" | xargs -r dex

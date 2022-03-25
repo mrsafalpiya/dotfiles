@@ -1,0 +1,24 @@
+# Linux
+Local bin				~/.local/bin/
+Config folder			~/.config
+Videos					~/multimedia/vids
+Music					~/multimedia/music/
+Screenshots				"$(xdg-user-dir PICTURES)"/ss
+External Downloads		~/dl/ext
+
+# Programming
+Programming Notes		~/Dropbox/ProgrammingNotes/
+Programming Projects	~/Dropbox/projects
+DWM						~/dl/suckless/dwm
+
+# Study
+Study 2nd Sem			~/OneDrive/study/2nd/
+Class recordings		~/docs/class-recordings/
+
+# Templates
+LaTeX template			~/OneDrive/latex/template/new-report/
+C template				~/OneDrive/programming/c/Makefile/
+
+# Others
+Onedrive				~/OneDrive/
+VIFM Trash				~/.local/share/vifm/Trash/

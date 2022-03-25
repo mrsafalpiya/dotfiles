@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# Exit if any command fails
+set -e
+
+KEYWORD="$1"
+LOC="$2"
+
+# Check if keyword is not provided
+[ -z "$KEYWORD" ] && echo "ERROR: Keyword for provided!" >&2 && exit 1
+
+# Check if location is not provided
+[ -z "$LOC" ] && LOC="."
+
+while true; do
+	choice=$(grep --color=always -Rni "$KEYWORD" "$LOC" | fzf --ansi \
+		--delimiter : \
+		--preview 'bat --color=always {1} --highlight-line {2}' \
+	)
+
+	filename=$(printf '%s' "$choice" | cut -d':' -f1)
+	line=$(printf '%s' "$choice" | cut -d':' -f2)
+
+	nvim +"$line" "$filename"
+done

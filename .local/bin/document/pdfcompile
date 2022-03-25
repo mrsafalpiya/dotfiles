@@ -1,0 +1,11 @@
+#!/bin/sh
+
+file=$(readlink -f "$1")
+base="${file%.*}"
+ext="${file##*.}"
+
+case "$ext" in
+	md) pandoc --pdf-engine=xelatex "$file" -o "$base".pdf ;;
+	mom) pdfmom "$file" > "$base".pdf ;;
+	tex) pdflatex "$file" && rm "$base".log "$base".aux ;;
+esac

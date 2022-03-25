@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# List all the available man pages and select one using fzy
+SELECTION="$(man -k . | fzy)"
+
+# First remove any characters after a '-'
+# Then remove any spaces
+# Example:
+# printf (3p)          - print formatted output
+# Changes to:
+# printf(3p)
+MANENTRY="$(printf '%s' "${SELECTION%%-*}" | tr -d ' ')"
+
+echo "$MANENTRY"
+
+# Open the man page in neovim
+[ -n "$MANENTRY" ] && nvim man://"$MANENTRY"

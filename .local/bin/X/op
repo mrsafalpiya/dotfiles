@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# Exit if any command fails
+set -e
+
+FILE="$1"
+DOT_DESKTOP_LOC="/usr/share/applications/"
+
+# Check if a second argument is passed
+[ -z "$2" ] && SETSID="setsid -f " || SETSID=""
+
+[ -z "$SETSID" ] && TERM_HANDLER="$SETSID""xdg-open" || TERM_HANDLER="$SETSID""st -e xdg-open"
+NON_TERM_HANDLER="$SETSID""xdg-open"
+
+# Check if a filename as argument is provided
+[ -z "$1" ] && echo "No filename passed!" >&2 && exit 1
+
+# Get the file handler
+filetype=$(xdg-mime query filetype "$FILE")
+mimetype=$(xdg-mime query default "$filetype")
+
+# First check if the mimetype is empty
+[ -z "$mimetype" ] && mimetype="nvim.desktop" && [ -z "$SETSID" ] && TERM_HANDLER="$SETSID""nvim" || TERM_HANDLER="$SETSID""st -e nvim"
+
+# Check if the mimetype requires a terminal
+grep -q -i "terminal=true" "$DOT_DESKTOP_LOC""$mimetype" && eval_query="$TERM_HANDLER \"$FILE\"" || eval_query="$NON_TERM_HANDLER \"$FILE\""
+
+echo "$eval_query"
+
+# Execute the command
+eval "$eval_query"
