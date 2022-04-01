@@ -49,26 +49,6 @@ PS1="$ "
 # Set the terminal title to current directory
 PS1+="\[\e]2;\W\a\]"
 
-# Function to generate PS1 after CMDs
-__prompt_command() {
-	local EXIT="$?"
-	PS1=""
-
-	local Red='\[\e[0;91m\]'
-	local Green='\[\e[0;92m\]'
-	local Reset='\[\e[0m'
-
-	if [ $EXIT != 0 ]; then
-		PS1+="${Red}$EXIT "
-	else
-		PS1+="${Green}"
-	fi
-
-	PS1+="\W${Reset} \$ "
-	# Set the terminal title to current directory
-	# PS1+="\[\e]2;\W\a\]"
-}
-
 # Disable ctrl-s and ctrl-q
 stty -ixon
 
