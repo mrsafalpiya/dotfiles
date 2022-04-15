@@ -204,6 +204,14 @@ source ~/.vim/mdanswers.vim
 let g:tex_flavor = "latex"
 " Disable indentation of continuation lines after \item
 let g:tex_indent_items = v:false
+" Custom keyword highlighting
+fun! LaTeXHi()
+	syn match laTeXHi /\\ques/
+	syn match laTeXHi /\\item/
+	hi link laTeXHi Todo
+endfu
+autocmd bufenter tex :call LaTeXHi()
+autocmd filetype tex :call LaTeXHi()
 
 " == WRITING ==
 " Custom keybinds for pdfcompile and pdfcompileopen
