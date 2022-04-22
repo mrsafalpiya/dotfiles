@@ -64,14 +64,20 @@ if !empty(glob(PlugFile)) && !isdirectory(PlugFile)
 	" Improved syntax highlighting
 	Plug 'bfrg/vim-cpp-modern'
 	Plug 'rhysd/vim-clang-format'
-	let g:clang_format#style_options = {
-				\ "BasedOnStyle": "LLVM",
-				\ "TabWidth": 4,
-				\ "UseTab": "Always",
-				\ "BreakBeforeBraces": "Linux",
-				\ "AllowShortIfStatementsOnASingleLine": "false",
-				\ "IndentCaseLabels": "false",
-				\ "AlwaysBreakAfterReturnType": "AllDefinitions"}
+
+	" Plugins only for nvim
+	if has('nvim')
+		" Treesitter
+		Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+		" Indent blankline
+		Plug 'lukas-reineke/indent-blankline.nvim'
+		nnoremap <leader>i :IndentBlanklineToggle<CR>
+		let g:indent_blankline_enabled = v:false
+		let g:indent_blankline_use_treesitter = v:true
+		let g:indent_blankline_show_current_context = v:true
+		let g:indent_blankline_show_current_context_start = v:true
+	endif
 
 	call plug#end()
 endif
@@ -121,6 +127,19 @@ if has('nvim')
 		autocmd!
 		au TextYankPost * silent! lua vim.highlight.on_yank { higroup='IncSearch', timeout=400 }
 	augroup END
+
+
+	" == TREESITTER ==
+	lua << EOF
+	require'nvim-treesitter.configs'.setup {
+		ensure_installed = { "c", "cpp" },
+
+		highlight = {
+			enable = true,
+			additional_vim_regex_highlighting = false,
+		},
+	}
+EOF
 endif
 
 " == CORE FUNCTIONALITIES ==
@@ -207,6 +226,7 @@ let g:tex_indent_items = v:false
 " Custom keyword highlighting
 fun! LaTeXHi()
 	syn match laTeXHi /\\ques/
+	syn match laTeXHi /\\defineQues/
 	syn match laTeXHi /\\item/
 	hi link laTeXHi Todo
 endfu
