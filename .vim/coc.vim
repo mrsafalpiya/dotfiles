@@ -28,6 +28,10 @@ function! s:show_documentation()
 	endif
 endfunction
 
+" Highlight the symbol and its references
+nnoremap <silent> <leader>h :call CocActionAsync('highlight')<CR>
+highlight link CocHighlightText Search
+
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 

@@ -10,20 +10,7 @@ if !empty(glob(PlugFile)) && !isdirectory(PlugFile)
 	call plug#begin('~/.vim/autoload/plugged')
 
 	" Colorscheme
-	Plug 'robertmeta/nofrils'
-	let g:nofrils_heavycomments=1
-	let g:nofrils_heavylinenumbers=1
-
-	" Custom settings for base16-bright
-	function! s:base16_customize() abort
-		highlight Normal guibg=NONE
-		highlight LineNr guibg=NONE
-		highlight MatchParen guibg=#525252
-	endfunction
-	augroup on_change_colorschema
-		autocmd!
-		autocmd ColorScheme base16-bright call s:base16_customize()
-	augroup END
+	Plug 'mrsafalpiya/sp-plain-vim'
 
 	" Improving quality of life
 	Plug 'tpope/vim-commentary'
@@ -136,7 +123,7 @@ if has('nvim')
 
 		highlight = {
 			enable = true,
-			additional_vim_regex_highlighting = false,
+			additional_vim_regex_highlighting = true,
 		},
 	}
 EOF
