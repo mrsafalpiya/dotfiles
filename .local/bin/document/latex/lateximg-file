@@ -57,7 +57,7 @@ REL_PATH=$(realpath --relative-to="$MD_LOC" "$OUT_LOC")
 LATEX_SYNTAX="$(printf '%s\n' \
 	"\\\begin{figure}[H]" \
 	"\t\\\centering" \
-	"\t\\\includegraphics[width=\\\textwidth]{$REL_PATH/$OUT_BASE_NAME}" \
+	"\t\\\includegraphics[width=\\\textwidth,height=\\\textheight,keepaspectratio]{$REL_PATH/$OUT_BASE_NAME}" \
 	"\t\\\caption{$IMG_DESC}" \
 	"\\\end{figure}")"
 
