@@ -117,16 +117,18 @@ if has('nvim')
 
 
 	" == TREESITTER ==
-	lua << EOF
-	require'nvim-treesitter.configs'.setup {
-		ensure_installed = { "c", "cpp" },
+	if exists('plugs') && has_key(plugs, 'nvim-treesitter')
+		lua << EOF
+		require'nvim-treesitter.configs'.setup {
+			ensure_installed = { "c", "cpp" },
 
-		highlight = {
-			enable = true,
-			additional_vim_regex_highlighting = true,
-		},
-	}
+			highlight = {
+				enable = true,
+				additional_vim_regex_highlighting = true,
+			},
+		}
 EOF
+	endif
 endif
 
 " == CORE FUNCTIONALITIES ==
@@ -174,7 +176,7 @@ set background=dark
 " Enable guicolors
 set termguicolors
 " Colorscheme
-colorscheme sp-plain
+silent! colorscheme sp-plain
 
 " == INDENTATION ==
 " Disable any filetype indentations
