@@ -5,6 +5,7 @@ unclutter &
 locker &
 spstatus &
 sxhkd &
+dunst &
 
 # Start dwm
 exec dwm
