@@ -44,10 +44,7 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 [[ $- != *i* ]] && return
 
 # Prompt Configuration
-# PROMPT_COMMAND=__prompt_command
 PS1="$ "
-# Set the terminal title to current directory
-PS1+="\[\e]2;\W\a\]"
 
 # Disable ctrl-s and ctrl-q
 stty -ixon

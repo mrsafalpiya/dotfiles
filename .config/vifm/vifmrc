@@ -10,9 +10,6 @@ set sortnumbers
 " Use Vim's format of help file (Enables help for specific commands)
 set vimhelp
 
-" Enable title change when changing directories
-set title
-
 " Command used to edit files in various contexts
 set vicmd=nvim
 
