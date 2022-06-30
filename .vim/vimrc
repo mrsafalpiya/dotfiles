@@ -101,8 +101,6 @@ endif
 " For neovim only
 if has('nvim')
 	" == APPEARANCE ==
-	" Enable title
-	set title
 	" Set cursor to block at all time
 	set guicursor=a:block
 	" Disable statusline
@@ -120,7 +118,7 @@ if has('nvim')
 	if exists('plugs') && has_key(plugs, 'nvim-treesitter')
 		lua << EOF
 		require'nvim-treesitter.configs'.setup {
-			ensure_installed = { "c", "cpp" },
+			ensure_installed = { "c", "cpp", "comment" },
 
 			highlight = {
 				enable = true,
