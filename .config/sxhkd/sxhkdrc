@@ -42,7 +42,7 @@ super + ctrl + c
 # = ETC =
 # Browser
 super + w
-	$BROWSER --use-gl=desktop --enable-features=VaapiVideoDecoder
+	$BROWSER --use-gl=desktop --enable-features=VaapiVideoDecoder --disable-features=UseChromeOSDirectVideoDecoder
 # ncmpcpp
 alt + ctrl + m
 	st -c ncmpcppterm -e ncmpcpp
@@ -58,14 +58,12 @@ XF86TouchpadToggle
 	toggletouchpad
 XF86Touchpad{Off,On}
 	toggletouchpad {on,off}
-XF86MonBrightnessDown
-	xbacklight -dec 5
-XF86MonBrightnessUp
-	xbacklight -inc 5
+XF86MonBrightness{Down,Up}
+	xbacklight -{dec,inc} 5; dunstify -r 3 "BRIGHT: $(xbacklight -get)"
 XF86AudioMute
-	amixer sset Master toggle; pkill -RTMIN+10 blocks
-XF86Audio{Raise,Lower}Volume
-	amixer sset Master 5%{+,-}; pkill -RTMIN+10 blocks
+	pamixer -t; dunstify -r 2 "VOL: $(pamixer --get-volume-human)"
+XF86Audio{Lower,Raise}Volume
+	pamixer --allow-boost -{d,i} 5; dunstify -t 1000 -r 2 "VOL: $(pamixer --get-volume-human)"
 XF86Audio{Next,Prev}
 	mpc {next,prev}
 XF86Audio{Pause,Play,Stop}
