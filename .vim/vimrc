@@ -20,9 +20,15 @@ if !empty(glob(PlugFile)) && !isdirectory(PlugFile)
 	" Plug 'frazrepo/vim-rainbow'
 	" let g:rainbow_active = 1
 	Plug 'mbbill/undotree'
+	Plug 'ctrlpvim/ctrlp.vim'
+	" Search in vim's current dir only
+	let g:ctrlp_working_path_mode = ''
+	" Search in buffers
+	nmap <leader>b :CtrlPBuffer<CR>
 
 	" Frontend
 	Plug 'chrisbra/Colorizer'
+	Plug 'mattn/emmet-vim'
 
 	" Pandoc
 	Plug 'vim-pandoc/vim-pandoc'
@@ -141,7 +147,10 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " Case in-sensitive wildmenu selection
 set wildignorecase
 " Don't offer to open certain files/directories
-set wildignore+=node_modules/*,bower_components/*,.git/*
+set wildignore+=node_modules/*,bower_components/*,.git/*,*.o
+" Give files with no extension a lower priority when it comes to matching
+" wildcards (To avoid opening executables accidently)
+set suffixes+=,,
 " Lazily redraw screen while executing macros, registers etc
 set lazyredraw
 " Case in-sensitive search
@@ -173,6 +182,8 @@ set textwidth=80
 set background=dark
 " Enable guicolors
 set termguicolors
+" Disable word wrapping
+set nowrap
 " Colorscheme
 silent! colorscheme sp-plain
 
@@ -200,6 +211,12 @@ function! SynGroup()
 endfun
 
 nnoremap <F2> :call SynGroup()<CR>
+
+" == C ==
+" Search for function declarations/implementations quickly
+autocmd FileType c,cpp nnoremap <buffer> <leader>f /^
+" Search and Goto function declarations/implementations quickly
+autocmd FileType c,cpp nnoremap <buffer> <leader>g /^<C-R><C-W>(<CR>
 
 " == MARKDOWN ==
 " Source custom answer finding script
