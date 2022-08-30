@@ -25,6 +25,8 @@ if !empty(glob(PlugFile)) && !isdirectory(PlugFile)
 	let g:ctrlp_working_path_mode = ''
 	" Search in buffers
 	nmap <leader>b :CtrlPBuffer<CR>
+	Plug 'machakann/vim-highlightedyank'
+	let g:highlightedyank_highlight_duration = 400
 
 	" Frontend
 	Plug 'chrisbra/Colorizer'
@@ -42,9 +44,9 @@ if !empty(glob(PlugFile)) && !isdirectory(PlugFile)
 	let g:vimtex_indent_enabled = v:false
 	" Enable vimtex foldings
 	" let g:vimtex_fold_enabled = v:true
-	
-	" Groff
-	Plug 'Gavinok/vim-troff'
+
+	" C
+	Plug 'rhysd/vim-clang-format'
 
 	" COC
 	Plug 'neoclide/coc.nvim', {'branch': 'release', 'on': [] }
@@ -53,24 +55,14 @@ if !empty(glob(PlugFile)) && !isdirectory(PlugFile)
 	" Enable coc plugin only on <leader>c
 	nnoremap <leader>c :call plug#load('coc.nvim') \| source ~/.vim/coc.vim<CR>
 
-	" C
-	" Improved syntax highlighting
-	Plug 'bfrg/vim-cpp-modern'
-	Plug 'rhysd/vim-clang-format'
-
 	" Plugins only for nvim
 	if has('nvim')
-		" Treesitter
-		Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-
 		" Indent blankline
 		Plug 'lukas-reineke/indent-blankline.nvim'
 		nnoremap <leader>i :IndentBlanklineToggle<CR>
 		let g:indent_blankline_enabled = v:false
-		let g:indent_blankline_use_treesitter = v:true
-		let g:indent_blankline_show_current_context = v:true
-		let g:indent_blankline_show_current_context_start = v:true
 	endif
+
 
 	call plug#end()
 endif
@@ -86,6 +78,8 @@ if !has('nvim')
 	set hidden
 	" Enable wildmenu
 	set wildmenu
+	" Disable statusline
+	set laststatus=0
 
 	" == SEARCHING ==
 	" Search as you type
@@ -118,21 +112,6 @@ if has('nvim')
 		autocmd!
 		au TextYankPost * silent! lua vim.highlight.on_yank { higroup='IncSearch', timeout=400 }
 	augroup END
-
-
-	" == TREESITTER ==
-	if exists('plugs') && has_key(plugs, 'nvim-treesitter')
-		lua << EOF
-		require'nvim-treesitter.configs'.setup {
-			ensure_installed = { "c", "cpp", "comment" },
-
-			highlight = {
-				enable = true,
-				additional_vim_regex_highlighting = true,
-			},
-		}
-EOF
-	endif
 endif
 
 " == CORE FUNCTIONALITIES ==
@@ -186,6 +165,7 @@ set termguicolors
 set nowrap
 " Colorscheme
 silent! colorscheme sp-plain
+highlight link HighlightedyankRegion IncSearch
 
 " == INDENTATION ==
 " Disable any filetype indentations
@@ -229,10 +209,11 @@ let g:tex_flavor = "latex"
 let g:tex_indent_items = v:false
 " Custom keyword highlighting
 fun! LaTeXHi()
+	syn match laTeXHi /\\.*section/
 	syn match laTeXHi /\\ques/
 	syn match laTeXHi /\\defineQues/
 	syn match laTeXHi /\\item/
-	hi link laTeXHi Todo
+	hi link laTeXHi Title
 endfu
 autocmd bufenter tex :call LaTeXHi()
 autocmd filetype tex :call LaTeXHi()

@@ -13,5 +13,8 @@
 			"command": "shfmt",
 			"args": ["-i", "2", "-bn", "-ci", "-sr"]
 		}
-	}
+	},
+
+	"clangd.disableDiagnostics": true,
+	"clangd.inlayHints.enable": false
 }
