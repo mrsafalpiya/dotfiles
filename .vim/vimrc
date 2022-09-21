@@ -30,7 +30,7 @@ if !empty(glob(PlugFile)) && !isdirectory(PlugFile)
 
 	" Frontend
 	Plug 'chrisbra/Colorizer'
-	Plug 'mattn/emmet-vim'
+	" Plug 'mattn/emmet-vim'
 
 	" Pandoc
 	Plug 'vim-pandoc/vim-pandoc'
@@ -44,9 +44,6 @@ if !empty(glob(PlugFile)) && !isdirectory(PlugFile)
 	let g:vimtex_indent_enabled = v:false
 	" Enable vimtex foldings
 	" let g:vimtex_fold_enabled = v:true
-
-	" C
-	Plug 'rhysd/vim-clang-format'
 
 	" COC
 	Plug 'neoclide/coc.nvim', {'branch': 'release', 'on': [] }
@@ -197,6 +194,8 @@ nnoremap <F2> :call SynGroup()<CR>
 autocmd FileType c,cpp nnoremap <buffer> <leader>f /^
 " Search and Goto function declarations/implementations quickly
 autocmd FileType c,cpp nnoremap <buffer> <leader>g /^<C-R><C-W>(<CR>
+" clang-format
+autocmd FileType c,cpp :command! -buffer ClangFormat execute "!clang-format -i %"
 
 " == MARKDOWN ==
 " Source custom answer finding script
@@ -224,3 +223,7 @@ autocmd FileType vimwiki,markdown,rmarkdown,troff,tex nnoremap <buffer> <leader>
 autocmd FileType vimwiki,markdown,rmarkdown,troff,tex nnoremap <buffer> <leader>op :silent !setsid -f pdfcompileopen %<CR>
 " Enable spell checking by default
 autocmd FileType vimwiki,markdown,rmarkdown,troff,tex set spell
+
+" == C# ==
+autocmd FileType cs setlocal expandtab shiftwidth=4 tabstop=4
+autocmd FileType cs setlocal listchars=tab:\ \ ,lead:\ ,trail:\ ,extends:→,precedes:←,nbsp:⦸
