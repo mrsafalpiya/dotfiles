@@ -1,7 +1,16 @@
 #!/bin/sh
 
-devid=$(xinput | grep "USB OPTICAL MOUSE" | cut -d'=' -f 2 | cut -f 1)
-propid=$(xinput --list-props "$devid" | grep "libinput Accel Speed (" | \
-		cut -d'(' -f2 | cut -d')' -f1)
+# = Mouse =
+mouse_devid=$(xinput | grep "USB OPTICAL MOUSE" | cut -d'=' -f 2 | cut -f 1)
+mouse_propid=$(xinput --list-props "$mouse_devid" | grep "libinput Accel Speed (" | cut -d'(' -f2 | cut -d')' -f1)
 
-xinput --set-prop "$devid" "$propid" -1
+# Tweak acceleration in mouse
+xinput --set-prop "$mouse_devid" "$mouse_propid" -1
+
+# = Touchpad =
+touchpad_devid=$(xinput | grep "SynPS/2 Synaptics TouchPad" | cut -d'=' -f 2 | cut -f 1)
+touchpad_tapping_propid=$(xinput --list-props "$touchpad_devid" | grep "libinput Tapping Enabled (" | cut -d'(' -f2 | cut -d')' -f1)
+touchpad_natural_scrolling_propid=$(xinput --list-props "$touchpad_devid" | grep "libinput Natural Scrolling Enabled (" | cut -d'(' -f2 | cut -d')' -f1)
+
+xinput --set-prop "$touchpad_devid" "$touchpad_tapping_propid" 1 # Tapping
+xinput --set-prop "$touchpad_devid" "$touchpad_natural_scrolling_propid" 1 # Natural scrolling

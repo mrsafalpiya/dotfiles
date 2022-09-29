@@ -5,5 +5,5 @@ map <C-e> exec 'pdfedit "$FILE"'
 # map <C-s> exec 'st -d "$FILE"'
 map ,t exec 'pdfdirterm "$FILE"'
 
-# Open a dragon-drag-and-drop on the file
-map <M-d> exec 'dragon-drag-and-drop "$FILE"'
+# Open a dragon-drop on the file
+map <M-d> exec 'dragon-drop "$FILE"'

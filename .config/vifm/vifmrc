@@ -4,6 +4,9 @@ set number
 " Enable relative number line
 set relativenumber
 
+" Show hidden (dot) files
+set dotfiles
+
 " Natural sort of (version) numbers within text.
 set sortnumbers
 
@@ -93,7 +96,7 @@ command! QuickCD : let $QCD_PICK = term('quickcd stdout 2> /dev/tty')
 nnoremap <c-q> :QuickCD<cr>
 
 " Enable dragon support
-command! dragon dragon-drag-and-drop -a -x %f
+command! dragon dragon-drop -a -x %f
 map <M-d> :dragon<CR>
 
 " Toggle visibility of preview window

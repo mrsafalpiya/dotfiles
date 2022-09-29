@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# List all the available man pages and select one using fzy
-SELECTION="$(man -k . | fzy)"
+# List all the available man pages and select one using fzf
+SELECTION="$(man -k . | fzf)"
 
 # First remove any characters after a '-'
 # Then remove any spaces
