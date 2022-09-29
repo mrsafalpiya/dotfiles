@@ -44,7 +44,19 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 [[ $- != *i* ]] && return
 
 # Prompt Configuration
-PS1="$ "
+COL_B_RED='\[\e[1;31m\]'
+COL_CYAN='\[\e[0;36m\]'
+COL_B_CYAN='\[\e[1;36m\]'
+COL_RESET='\[\033[0m\]'
+
+PS1="\$(VALU="\$?" ; if [ \$VALU == 0 ]; then printf \"$COL_B_CYAN\"; else printf \"$COL_B_RED\"; fi)"
+PS1+="\u@\h:"
+PS1+="\w \$ "
+PS1+="$COL_RESET"
+
+# Print newline AFTER executing a command
+PROMPT_COMMAND="export PROMPT_COMMAND=echo"
+alias clear="unset PROMPT_COMMAND; clear; PROMPT_COMMAND='export PROMPT_COMMAND=echo'"
 
 # Disable ctrl-s and ctrl-q
 stty -ixon
@@ -63,6 +75,8 @@ HISTSIZE= #
 #   / _ \ | |    | |  / _ \ \___ \|  _| \___ \
 #  / ___ \| |___ | | / ___ \ ___) | |___ ___) |
 # /_/   \_\_____|___/_/   \_\____/|_____|____/
+
+alias vim="nvim"
 
 # Verbosity and settings that you pretty much just always are going to want.
 alias \
