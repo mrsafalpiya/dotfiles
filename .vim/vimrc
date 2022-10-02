@@ -30,7 +30,8 @@ if !empty(glob(PlugFile)) && !isdirectory(PlugFile)
 
 	" Frontend
 	Plug 'chrisbra/Colorizer'
-	" Plug 'mattn/emmet-vim'
+	Plug 'mattn/emmet-vim'
+	let g:user_emmet_leader_key='<C-Q>'
 
 	" Pandoc
 	Plug 'vim-pandoc/vim-pandoc'
@@ -152,8 +153,6 @@ set colorcolumn=80
 set linebreak
 " Draw sign column replacing the line number itself
 set signcolumn=number
-" Set textwidth to 80
-set textwidth=80
 " Set background to dark
 set background=dark
 " Enable guicolors
