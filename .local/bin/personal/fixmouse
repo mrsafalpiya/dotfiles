@@ -9,8 +9,7 @@ xinput --set-prop "$mouse_devid" "$mouse_propid" -1
 
 # = Touchpad =
 touchpad_devid=$(xinput | grep "SynPS/2 Synaptics TouchPad" | cut -d'=' -f 2 | cut -f 1)
-touchpad_tapping_propid=$(xinput --list-props "$touchpad_devid" | grep "libinput Tapping Enabled (" | cut -d'(' -f2 | cut -d')' -f1)
-touchpad_natural_scrolling_propid=$(xinput --list-props "$touchpad_devid" | grep "libinput Natural Scrolling Enabled (" | cut -d'(' -f2 | cut -d')' -f1)
+touchpad_tapping_propid=$(xinput --list-props "$touchpad_devid" | grep "Synaptics Tap Action (" | cut -d'(' -f2 | cut -d')' -f1)
 
-xinput --set-prop "$touchpad_devid" "$touchpad_tapping_propid" 1 # Tapping
-xinput --set-prop "$touchpad_devid" "$touchpad_natural_scrolling_propid" 1 # Natural scrolling
+xinput --set-prop "$touchpad_devid" "$touchpad_tapping_propid" 1 1 1 2 1 3 # Tapping
+xinput set-button-map "$touchpad_devid" 1 2 3 5 4 6 7 8 9 10 11 12 # Natural scrolling

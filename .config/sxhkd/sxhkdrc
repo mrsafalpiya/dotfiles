@@ -9,7 +9,7 @@ alt + ctrl + BackSpace
 # = SCREEN =
 # Change brightness
 alt + shift + {minus,equal}
-	xbacklight -{dec,inc} 5; dunstify -r 3 "BRIGHT: $(xbacklight -get)"
+	xbacklight -{dec,inc} 5; dunstify -r 3 "BRIGHT: $(xbacklight -get | cut -d. -f1)"
 
 # = AUDIO =
 # Toggle pause
