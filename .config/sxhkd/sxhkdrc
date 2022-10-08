@@ -37,7 +37,7 @@ super + shift + s
 	flameshot gui
 # Color picker
 super + ctrl + c
-	COL=$(xcolor) && echo $COL | xclip -r -selection clipboard && notify-send "$COL"
+	COL=$(xcolor | tr [:lower:] [:upper:]) && echo $COL | xclip -r -selection clipboard && notify-send -h string:bgcolor:$COL -h string:fgcolor:$(printf "#%02x%02x%02x" 0x$(dc -e "16o16iFF $(echo "$COL" | cut -c2-3)-p") 0x$(dc -e "16o16iFF $(echo "$COL" | cut -c4-5)-p") 0x$(dc -e "16o16iFF $(echo "$COL" | cut -c6-7)-p")) "$COL"
 
 # = ETC =
 # Browser
