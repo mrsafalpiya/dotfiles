@@ -11,6 +11,8 @@ xinput --set-prop "$mouse_devid" "$mouse_propid" -1
 touchpad_devid=$(xinput | grep "SynPS/2 Synaptics TouchPad" | cut -d'=' -f 2 | cut -f 1)
 touchpad_tapping_propid=$(xinput --list-props "$touchpad_devid" | grep "libinput Tapping Enabled (" | cut -d'(' -f2 | cut -d')' -f1)
 touchpad_natural_scrolling_propid=$(xinput --list-props "$touchpad_devid" | grep "libinput Natural Scrolling Enabled (" | cut -d'(' -f2 | cut -d')' -f1)
+touchpad_disable_while_typing_propid=$(xinput --list-props "$touchpad_devid" | grep "libinput Disable While Typing Enabled (" | cut -d'(' -f2 | cut -d')' -f1)
 
 xinput --set-prop "$touchpad_devid" "$touchpad_tapping_propid" 1 # Tapping
 xinput --set-prop "$touchpad_devid" "$touchpad_natural_scrolling_propid" 1 # Natural scrolling
+xinput --set-prop "$touchpad_devid" "$touchpad_disable_while_typing_propid" 1 # Disable while typing
