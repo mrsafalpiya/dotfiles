@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# This script first gets the password of the given argument from `pass` then
+# runs `xdotool` to simulate the password being typed.
+
+passname="$1"
+
+[ -z "$passname" ] && echo "Usage: $0 pass-name" && exit 1
+
+xdotool type $(pass show "$passname")
