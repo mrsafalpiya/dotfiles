@@ -45,13 +45,12 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 
 # Prompt Configuration
 COL_B_RED='\[\e[1;31m\]'
-COL_CYAN='\[\e[0;36m\]'
 COL_B_CYAN='\[\e[1;36m\]'
 COL_RESET='\[\033[0m\]'
 
 PS1="\$(VALU="\$?" ; if [ \$VALU == 0 ]; then printf \"$COL_B_CYAN\"; else printf \"$COL_B_RED\"; fi)"
-PS1+="\u@\h:"
-PS1+="\w \$ "
+PS1+="\w "
+PS1+="\$ "
 PS1+="$COL_RESET"
 
 # Print newline AFTER executing a command
@@ -63,9 +62,6 @@ stty -ixon
 
 # Better cd with spelling awareness
 shopt -s cdspell
-
-# Enable vi-mode
-set -o vi
 
 # Infinite history
 HISTSIZE= #
@@ -92,7 +88,7 @@ alias \
 
 # yt-dlp
 alias \
-	yt="yt-dlp --add-metadata -i --external-downloader aria2c --external-downloader-args aria2c:'--min-split-size=1M --max-connection-per-server=16 --max-concurrent-downloads=16 --split=16'" \
+	yt="yt-dlp --add-metadata -i -S vcodec:h264" \
 	yta="yt -x -f bestaudio/best"
 
 # Useful
