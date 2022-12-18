@@ -7,3 +7,6 @@ map ,t exec 'pdfdirterm "$FILE"'
 
 # Open a dragon-drop on the file
 map <M-d> exec 'dragon-drop "$FILE"'
+
+# Darken foreground color on inverted color mode
+set recolor-darkcolor "#bcbcbc"
