@@ -1,2 +1,6 @@
 # Toggle images on the website
 keymap i COMMAND "SET_OPTION display_image=toggle; RELOAD"
+
+# Half scroll
+keymap C-u PREV_HALF_PAGE
+keymap C-d NEXT_HALF_PAGE
