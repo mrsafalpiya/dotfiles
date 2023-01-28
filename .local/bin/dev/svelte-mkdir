@@ -1,0 +1,70 @@
+#!/bin/sh
+set -e
+
+# ABOUT THIS SCRIPT
+# -----------------
+#
+# To be used in a SvelteKit project, this script creates a directory with
+# proper files (`+page.svelte` and `+layout.svelte`) required for routing.
+#
+# Also detects `wails` project and adds proper wails scripts injection code.
+# For more info visit
+# https://github.com/plihelix/wails-template-sveltekit/issues/5
+
+# ALGORITHM
+# ---------
+#
+# if (`routes` dir exists up the tree in the path):
+#	if (`svelte.config.js` exists in $(routes_dir)/..):
+#		Touch `+page.svelte` file
+#		if (`wails.json` exists in $(svelte.config.js_dir)/..):
+#			// Create `+layout.svelte` with script injection code
+#		else:
+#			// Create `+layout.svelte` with basic code
+#	else:
+#		exit
+# else:
+#	exit
+
+# OPTIONS
+# -------
+
+LAYOUT_NON_WAILS="<slot />"
+
+LAYOUT_WAILS="<script>
+  import { browser } from "$app/environment";
+
+  if (browser && !window.hasOwnProperty("wailsbindings")) {
+    let wails_ipc = document.createElement("script");
+    wails_ipc.setAttribute("src", "/wails/ipc.js");
+
+    let wails_runtime = document.createElement("script");
+    wails_runtime.setAttribute("src", "/wails/runtime.js");
+
+    document.head.appendChild(wails_ipc);
+    document.head.appendChild(wails_runtime);
+  }
+</script>
+
+<slot />"
+
+# ACTUAL_OPERATIONS
+# -----------------
+
+FULL_PATH="$(pwd)/$1"
+
+# Exit if `routes` directory doesn't exist down the directory tree
+$(echo "$FULL_PATH" | grep -q "/routes/") || exit 1
+
+DOWN_ROUTES_DIR="$(echo $FULL_PATH | sed 's/\.*\/routes\/.*//')"
+
+# Exit if `svelte.config.*` file doesn't exist
+ls "$DOWN_ROUTES_DIR"/../svelte.config.* >/dev/null 2>&1 || exit 1
+
+mkdir "$FULL_PATH"
+touch "$FULL_PATH"/+page.svelte
+
+# Check if this is a wails project
+ls "$DOWN_ROUTES_DIR"/../../wails.json >/dev/null 2>&1 \
+	&& printf "$LAYOUT_WAILS" >"$FULL_PATH"/+layout.svelte \
+	|| printf "$LAYOUT_NON_WAILS" >"$FULL_PATH"/+layout.svelte
