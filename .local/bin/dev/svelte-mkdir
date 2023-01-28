@@ -31,7 +31,7 @@ set -e
 
 LAYOUT_NON_WAILS="<slot />"
 
-LAYOUT_WAILS="<script>
+LAYOUT_WAILS='<script>
   import { browser } from "$app/environment";
 
   if (browser && !window.hasOwnProperty("wailsbindings")) {
@@ -46,7 +46,7 @@ LAYOUT_WAILS="<script>
   }
 </script>
 
-<slot />"
+<slot />'
 
 # ACTUAL_OPERATIONS
 # -----------------
