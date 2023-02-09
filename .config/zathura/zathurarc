@@ -1,3 +1,6 @@
+# Disable Zathura's sandbox -- Allows opening of hyperlinks
+set sandbox none
+
 # Try to open the source file of the pdf
 map <C-e> exec 'pdfedit "$FILE"'
 
