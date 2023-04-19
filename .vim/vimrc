@@ -1,228 +1,429 @@
-" == PLUGINS ==
-" Set leader key to space
-let g:mapleader = "\<Space>"
-" Set local leader key to comma
-let maplocalleader=","
+" -----------------------------------------------------------------------------
+" |                                Plugins                                    |
+" -----------------------------------------------------------------------------
 
-" Source plugins.vim file if plug.vim file exist
-let PlugFile = $HOME . "/.vim/autoload/plug.vim"
-if !empty(glob(PlugFile)) && !isdirectory(PlugFile)
-	call plug#begin('~/.vim/autoload/plugged')
+let g:mapleader = "\<Space>"  " Set leader key to space
+let maplocalleader=","        " Set local leader key to comma
 
-	" Colorscheme
-	Plug 'mrsafalpiya/sp-plain-vim'
+call plug#begin('~/.vim/plugged')
 
-	" Improving quality of life
-	Plug 'tpope/vim-commentary'
-	Plug 'tpope/vim-surround'
-	Plug 'tpope/vim-repeat'
-	Plug 'andymass/vim-matchup'
-	" Plug 'frazrepo/vim-rainbow'
-	" let g:rainbow_active = 1
-	Plug 'mbbill/undotree'
-	Plug 'ctrlpvim/ctrlp.vim'
-	" Search in vim's current dir only
-	let g:ctrlp_working_path_mode = ''
-	" Search in buffers
-	nmap <leader>b :CtrlPBuffer<CR>
-	Plug 'machakann/vim-highlightedyank'
-	let g:highlightedyank_highlight_duration = 400
+" General
+" -------
 
-	" Frontend
-	Plug 'chrisbra/Colorizer'
-	Plug 'mattn/emmet-vim'
-	let g:user_emmet_leader_key='<C-Q>'
+Plug 'mrsafalpiya/sp-plain-vim'
+Plug 'tpope/vim-commentary'
+Plug 'suy/vim-context-commentstring'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'andymass/vim-matchup'
+Plug 'mbbill/undotree'
+Plug 'machakann/vim-highlightedyank'
 
-	" Pandoc
-	Plug 'vim-pandoc/vim-pandoc'
-	" Disable j and k bind as gj and gk
-	let g:pandoc#keyboard#display_motions = 0
-	Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'vifm/vifm.vim'
+nmap <silent> <leader>v :Vifm<CR>
 
-	" LaTeX
-	Plug 'lervag/vimtex'
-	" Disable vimtex indentation
-	let g:vimtex_indent_enabled = v:false
-	" Enable vimtex foldings
-	" let g:vimtex_fold_enabled = v:true
+Plug 'sbdchd/neoformat'
+let g:neoformat_enabled_css = ['prettier']
+nmap <silent> <leader>f :Neoformat<CR>
 
-	" COC
-	Plug 'neoclide/coc.nvim', {'branch': 'release', 'on': [] }
-	" Set the config directory to ~/.vim
-	let g:coc_config_home = "~/.vim"
-	" Enable coc plugin only on <leader>c
-	nnoremap <leader>c :call plug#load('coc.nvim') \| source ~/.vim/coc.vim<CR>
+" Writing
+" -------
 
-	" Plugins only for nvim
-	if has('nvim')
-		" Indent blankline
-		Plug 'lukas-reineke/indent-blankline.nvim'
-		nnoremap <leader>i :IndentBlanklineToggle<CR>
-		let g:indent_blankline_enabled = v:false
-	endif
+Plug 'vim-pandoc/vim-pandoc'
+let g:pandoc#keyboard#display_motions = 0  " Disable j and k bind as gj and gk
+Plug 'vim-pandoc/vim-pandoc-syntax'
 
+Plug 'lervag/vimtex'
+let g:vimtex_indent_enabled = v:false  " Disable vimtex indentation
 
-	call plug#end()
-endif
+" Frontend
+" --------
 
-" For vim only
-if !has('nvim')
-	" == CORE FUNCTIONALITIES ==
-	" Enable filetype plugin and indentation settings
-	filetype plugin on
-	" Enable syntax highlighting
-	syntax on
-	" Enable changing buffers without saving current
-	set hidden
-	" Enable wildmenu
-	set wildmenu
-	" Disable statusline
-	set laststatus=0
+Plug 'mattn/emmet-vim'
+let g:user_emmet_leader_key='<C-Q>'
+let g:user_emmet_settings = {
+			\  'variables': {'lang': 'en'},
+			\  'html': {
+			\    'empty_element_suffix': ' />',
+			\    'default_attributes': {
+			\      'option': {'value': v:null},
+			\      'textarea': {'id': v:null, 'name': v:null, 'cols': 10, 'rows': 10},
+			\    },
+			\    'snippets': {
+			\      'html:5': "<!DOCTYPE html>\n"
+			\              ."<html lang=\"${lang}\">\n"
+			\              ."  <head>\n"
+			\              ."    <meta charset=\"${charset}\" />\n"
+			\              ."    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n"
+			\              ."    <title></title>\n"
+			\              ."  </head>\n"
+			\              ."  <body>\n"
+			\              ."    ${child}|\n"
+			\              ."  </body>\n"
+			\              ."</html>",
+			\    },
+			\  },
+			\  'javascript' : {
+			\      'extends' : 'jsx',
+			\  },
+			\}
 
-	" == SEARCHING ==
-	" Search as you type
-	set incsearch
-	" Highlight search matches
-	set hlsearch
-	" Enable search count message
-	set shortmess-=S
+Plug 'evanleck/vim-svelte', {'branch': 'main'}
+Plug 'pangloss/vim-javascript'  " Required for proper vim-svelte's highlight
+Plug 'maxmellon/vim-jsx-pretty'
 
-	" == INDENTATION ==
-	" Automatically indent new line as previous
-	set autoindent
+" LSP
+" ---
 
-	" Fix `set termguicolors` for st
-	let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-	let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-endif
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-" For neovim only
+let g:coc_user_config = {}
+let g:coc_user_config['suggest.triggerAfterInsertEnter'] = v:true
+let g:coc_user_config['html.autoCreateQuotes'] = v:false
+let g:coc_user_config['svelte.plugin.html.tagComplete.enable'] = v:true
+let g:coc_user_config['svelte.enable-ts-plugin'] = v:true
+
+let g:coc_user_config['react-refactor.produceClass'] = v:false
+
+let g:coc_user_config['coc.source.file.enable'] = v:false
+let g:coc_user_config['coc.source.buffer.enable'] = v:false
+let g:coc_user_config['coc.source.around.enable'] = v:false
+
+let b:coc_disabled_sources = ['around', 'buffer', 'file']
+
+" Use <c-space> to trigger completion.
 if has('nvim')
-	" == APPEARANCE ==
-	" Set cursor to block at all time
-	set guicursor=a:block
-	" Disable statusline
-	set laststatus=0
+	inoremap <silent><expr> <c-space> coc#refresh()
+else
+	inoremap <silent><expr> <c-@> coc#refresh()
+endif
+inoremap <silent><expr> <backspace> coc#pum#visible() ? "\<bs>\<c-r>=coc#start()\<CR>" : "\<bs>"
+" Make sure floating windows are closed on ctrl c
+imap <silent> <C-c> <C-c>:call coc#float#close_all()<CR>
 
-	" == HACKS ==
-	" Highlight yanked text
-	augroup highlight_yank
-		autocmd!
-		au TextYankPost * silent! lua vim.highlight.on_yank { higroup='IncSearch', timeout=400 }
-	augroup END
+nmap <silent> [d <Plug>(coc-diagnostic-prev)
+nmap <silent> ]d <Plug>(coc-diagnostic-next)
+nmap <silent> <leader>ca <Plug>(coc-codeaction-cursor)
+
+nnoremap <silent> K :call ShowDocumentation()<CR>
+function! ShowDocumentation()
+	if CocAction('hasProvider', 'hover')
+		call CocActionAsync('doHover')
+	else
+		call feedkeys('K', 'in')
+	endif
+endfunction
+" Remap <C-f> and <C-b> to scroll float windows/popups
+if has('nvim-0.4.0') || has('patch-8.2.0750')
+	nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+	nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+	inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+	inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+	vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+	vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 endif
 
-" == CORE FUNCTIONALITIES ==
-" Set path to current directory along with sub directories
-set path=.,**
-" Set clipboard to primary selection
-set clipboard=unnamed
-" Enable undofile
-set undofile
-" Disable new line commenting
+nmap <leader>rn <Plug>(coc-rename)
+
+nmap <silent> <leader>gd <Plug>(coc-definition)
+nmap <silent> <leader>gD <Plug>(coc-type-definition)
+nmap <silent> <leader>gi <Plug>(coc-implementation)
+nmap <silent> <leader>gr <Plug>(coc-references)
+nmap <silent> <leader>k :silent call CocActionAsync('highlight')<CR>
+
+let g:coc_global_extensions = [
+			\ "coc-json",
+			\ "coc-yaml",
+			\ "coc-html",
+			\ "coc-css",
+			\ "coc-tsserver",
+			\ "coc-eslint",
+			\ "coc-react-refactor",
+			\ "coc-go",
+			\ "coc-pyright",
+			\ "coc-clangd",
+			\ "@yaegassy/coc-tailwindcss3",
+			\ "coc-svelte",
+			\ "coc-docker",
+			\ "coc-sql",
+			\ ]
+
+if has('nvim')
+	Plug 'norcalli/nvim-colorizer.lua'
+
+	Plug 'lukas-reineke/indent-blankline.nvim'
+	nnoremap <silent> <leader>i :IndentBlanklineToggle<CR>
+	let g:indent_blankline_enabled = v:false
+	let g:indent_space_char_blankline = ' '
+
+	Plug 'mfussenegger/nvim-dap'
+	nnoremap <silent> <leader>ds :lua require("dap").disconnect()<CR> \| <Cmd>lua require("dapui").close()<CR>
+	nnoremap <silent> <leader>b <Cmd>lua require("dap").toggle_breakpoint()<CR>
+	nnoremap <silent> <leader>cb <Cmd>lua require("dap").clear_breakpoints()<CR>
+	nnoremap <silent> <C-Space> <Cmd>lua require("dap").continue()<CR>
+	nnoremap <silent> <leader>j <Cmd>lua require("dap").run_to_cursor()<CR>
+	nnoremap <silent> <C-s> <Cmd>lua require("dap").step_into()<CR>
+	nnoremap <silent> <leader>o <Cmd>lua require("dap").step_out()<CR>
+	nnoremap <silent> <leader>s <Cmd>lua require("dap").step_over()<CR>
+
+	Plug 'williamboman/mason.nvim'
+	Plug 'jay-babu/mason-nvim-dap.nvim'
+
+	Plug 'rcarriga/nvim-dap-ui'
+	nnoremap <silent> <C-k> <Cmd>lua require("dapui").eval()<CR>
+	nnoremap <silent> <leader>du <Cmd>lua require("dapui").toggle()<CR>
+
+	Plug 'leoluz/nvim-dap-go'
+	nnoremap <silent> <leader>dt <Cmd>lua require("dap-go").debug_test()<CR>
+	nnoremap <silent> <leader>dl <Cmd>lua require("dap-go").debug_last_test()<CR>
+endif
+
+call plug#end()
+
+" -----------------------------------------------------------------------------
+" |                                General                                    |
+" -----------------------------------------------------------------------------
+
+set path=.,**              " Set path to current directory along with sub directories
+
+set clipboard=unnamed      " Set clipboard to primary selection
+
+set lazyredraw             " Lazily redraw screen while executing macros, registers etc
+set undofile               " Undo file
+set hidden                 " Enable changing buffers without saving current
+
+filetype plugin indent on  " Load filetype specific plugins and indentations
+set autoindent             " Set indentation same as the previous line
+set fileformat=unix
+
+" Disable any auto indentations
+autocmd BufEnter * setlocal nosmartindent nocindent indentexpr= indentkeys=
+" Disable auto commenting
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-" Case in-sensitive wildmenu selection
-set wildignorecase
+
+set mouse=  " Disable any mouse support
+
+" Wildmenu
+" --------
+
+set wildmenu                                       " Enable wildmenu
+set wildignorecase                                 " Case in-sensitive wildmenu selection
 " Don't offer to open certain files/directories
-set wildignore+=node_modules/*,bower_components/*,.git/*,*.o
+set wildignore+=**/node_modules/**,**/dist/**,**/.git/**,**/*.o,**/venv/**,**/vendor/**
 " Give files with no extension a lower priority when it comes to matching
 " wildcards (To avoid opening executables accidently)
 set suffixes+=,,
-" Lazily redraw screen while executing macros, registers etc
-set lazyredraw
-" Case in-sensitive search
-set ignorecase
-" Smart case sensitive search
-set smartcase
-" Case in-sensitive insert-completion
-set infercase
 
-" == APPEARANCE ==
-" Enable numbering
-set number
-" Enable relative numbering
-set relativenumber
-" Enable list
-set list
-" Better listchars
-set listchars=tab:🢒\ ,lead:·,trail:·,extends:→,precedes:←,nbsp:⦸
-set showbreak=\ ↳\ 
-" Draw line at 80th column
-set colorcolumn=80
-" Wrap whole word
-set linebreak
-" Draw sign column replacing the line number itself
-set signcolumn=number
-" Set background to dark
-set background=dark
-" Enable guicolors
-set termguicolors
-" Disable word wrapping
-set nowrap
+" Searching
+" ---------
+
+set incsearch     " Search as you type
+set hlsearch      " Highlight search matches
+set shortmess-=S  " Enable search count message
+set ignorecase    " Case in-sensitive search
+set smartcase     " Smart case sensitive search
+set infercase     " Case in-sensitive insert-completion
+
+" -----------------------------------------------------------------------------
+" |                              Appearance                                   |
+" -----------------------------------------------------------------------------
+
+" Interface
+" ---------
+
+set number             " Show line numbers
+set relativenumber     " Show relative line numbers
+set guicursor=a:block  " Set cursor to block at all time
+set list               " Enable list mode
+set laststatus=0       " Disable statusline
+
+" Set proper listchars on every buffer load
+function SetListChars()
+	let l:listchars = 'tab:\ \ ,trail:·,extends:>,precedes:<,nbsp:⦸'
+	if !&expandtab
+		let l:listchars = l:listchars . ',lead:·'
+	endif
+	exec 'setlocal listchars=' . l:listchars
+endfunction
+autocmd BufEnter * call SetListChars()
+
+set signcolumn=yes
+
+" Code
+" ----
+
+set nowrap             " Disable line wraping
+set linebreak          " Wrap whole word
+let &showbreak = '↳ '  " Character to show on the next line of a line wrap
+
 " Colorscheme
-silent! colorscheme sp-plain
-highlight link HighlightedyankRegion IncSearch
+" -----------
 
-" == INDENTATION ==
-" Disable any filetype indentations
-filetype indent off
+syntax on
+set termguicolors
+set background=dark
+colorscheme sp-plain
 
-" == HACKS ==
+" Fix `set termguicolors` for st
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+
+" -----------------------------------------------------------------------------
+" |                                 Hacks                                     |
+" -----------------------------------------------------------------------------
+
 " Set omnifunction to syntax completion
 set omnifunc=syntaxcomplete#Complete
+
 " Jump to guide character
 nmap <Space><Space> <Esc>/<++><Enter>:noh<CR>"_c4l
-" Clear search highlights
-nnoremap <leader>n :noh<CR>
+
 " Run make in shell
 nnoremap <leader>m :!make<CR>
+
 " Remove trailing whitespaces on pressing F5
 nnoremap <silent> <F5> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
 
-" == VIM ==
+" Triger `autoread` when files changes on disk
+autocmd FocusGained,BufEnter,CursorHold,CursorHoldI *
+			\ if mode() !~ '\v(c|r.?|!|t)' && getcmdwintype() == '' | checktime | endif
+" Notification after file change
+autocmd FileChangedShellPost *
+			\ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
+
 " Get highlight group
 function! SynGroup()
 	let l:s = synID(line('.'), col('.'), 1)
 	echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
 endfun
-
 nnoremap <F2> :call SynGroup()<CR>
 
-" == C ==
-" Search for function declarations/implementations quickly
-autocmd FileType c,cpp nnoremap <buffer> <leader>f /^
-" Search and Goto function declarations/implementations quickly
-autocmd FileType c,cpp nnoremap <buffer> <leader>g /^<C-R><C-W>(<CR>
-" clang-format
-autocmd FileType c,cpp :command! -buffer ClangFormat execute "!clang-format -i %"
+" Show cursor line on leaving a split
+augroup CursorLineOnSplitLeave
+	autocmd!
+	autocmd VimEnter,WinEnter,BufWinEnter * setlocal nocursorline
+	autocmd WinLeave * setlocal cursorline
+augroup END
 
-" == MARKDOWN ==
-" Source custom answer finding script
-source ~/.vim/mdanswers.vim
+" Proper indentation between braces and tag
+inoremap <expr> <CR> InsertMapForEnter()
+function! InsertMapForEnter()
+	if pumvisible()
+		return "\<C-y>"
+	elseif strcharpart(getline('.'),getpos('.')[2]-1,1) == ')'
+		return "\<CR>\<Esc>O"
+	elseif strcharpart(getline('.'),getpos('.')[2]-1,1) == '}'
+		return "\<CR>\<Esc>O"
+	elseif strcharpart(getline('.'),getpos('.')[2]-1,1) == ']'
+		return "\<CR>\<Esc>O"
+	elseif strcharpart(getline('.'),getpos('.')[2]-1,2) == '</'
+		return "\<CR>\<Esc>O"
+	else
+		return "\<CR>"
+	endif
+endfunction
 
-" == LaTeX ==
-" Set default tex flavor detection to latex
-let g:tex_flavor = "latex"
-" Disable indentation of continuation lines after \item
-let g:tex_indent_items = v:false
-" Custom keyword highlighting
-fun! LaTeXHi()
-	syn match laTeXHi /\\.*section/
-	syn match laTeXHi /\\ques/
-	syn match laTeXHi /\\defineQues/
-	syn match laTeXHi /\\item/
-	hi link laTeXHi Title
-endfu
-autocmd bufenter tex :call LaTeXHi()
-autocmd filetype tex :call LaTeXHi()
+" Better indentation level on pressing 'S'
+nnoremap <expr> S line(".") != 1 && getline(".") =~ '^\s*$' && getline(line(".")-1) != '' ? ":execute 'normal! 0DkJ' \| call feedkeys('o')<CR>" : "S"
 
-" == WRITING ==
-" Custom keybinds for pdfcompile and pdfcompileopen
-autocmd FileType vimwiki,markdown,rmarkdown,troff,tex nnoremap <buffer> <leader>tp :!pdfcompile %<CR>
-autocmd FileType vimwiki,markdown,rmarkdown,troff,tex nnoremap <buffer> <leader>op :silent !setsid -f pdfcompileopen %<CR>
-" Enable spell checking by default
-autocmd FileType vimwiki,markdown,rmarkdown,troff,tex set spell
+" -----------------------------------------------------------------------------
+" |                           Filetype specific                               |
+" -----------------------------------------------------------------------------
 
-" == C# ==
-autocmd FileType cs setlocal expandtab shiftwidth=4 tabstop=4
-autocmd FileType cs setlocal listchars=tab:\ \ ,lead:\ ,trail:\ ,extends:→,precedes:←,nbsp:⦸
+" Custom commands for document writings
+augroup writing_filetype
+	autocmd!
+	" Custom keybinds for pdfcompile and pdfcompileopen
+	autocmd FileType vimwiki,markdown,rmarkdown,troff,tex nnoremap <buffer> <leader>tp :!pdfcompile %<CR>
+	autocmd FileType vimwiki,markdown,rmarkdown,troff,tex nnoremap <buffer> <leader>op :silent !setsid -f pdfcompileopen %<CR>
+	" Enable spell checking by default
+	autocmd FileType vimwiki,markdown,rmarkdown,troff,tex setlocal spell
+	" Enable line wrap
+	autocmd FileType vimwiki,markdown,rmarkdown,troff,tex setlocal wrap
+	" Indentation size
+	autocmd FileType vimwiki,markdown,rmarkdown,troff,tex setlocal tabstop=4
+	autocmd FileType vimwiki,markdown,rmarkdown,troff,tex setlocal shiftwidth=4
+augroup END
+
+" Indentation settings for filetypes using prettier
+augroup prettier_filetype
+	autocmd!
+	let b:prettier_ft = ['html', 'css', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'svelte']
+	execute "autocmd FileType " . join(b:prettier_ft, ",") . " setlocal expandtab shiftwidth=2 tabstop=2"
+augroup END
+
+" Indentation settings for djlint
+augroup djlint_filetype
+	autocmd!
+	let b:djlint_ft = ['htmldjango']
+	execute "autocmd FileType " . join(b:djlint_ft, ",") . " setlocal expandtab shiftwidth=4 tabstop=4"
+augroup END
+
+" Identation and omni key in SQL ft
+augroup sql_filetype
+	autocmd!
+	let b:sql_ft = ['sql']
+	execute "autocmd FileType " . join(b:sql_ft, ",") . " setlocal expandtab shiftwidth=2 tabstop=2"
+	let g:ftplugin_sql_omni_key = '<C-k>'
+augroup END
+
+" Identation settings for php
+augroup php_filetype
+	autocmd!
+	let b:php_ft = ['php']
+	execute "autocmd FileType " . join(b:php_ft, ",") . " setlocal autoindent expandtab shiftwidth=4 tabstop=4"
+augroup END
+
+" -----------------------------------------------------------------------------
+" |                                  Lua                                      |
+" -----------------------------------------------------------------------------
+
+if has('nvim')
+lua <<EOF
+	-- Colorizer
+	require'colorizer'.setup()
+
+	-- DAP
+	require("dapui").setup()
+	require('dap-go').setup()
+
+	local dap, dapui = require("dap"), require("dapui")
+	dap.listeners.after.event_initialized["dapui_config"] = function()
+		dapui.open()
+	end
+
+	-- Meson
+	require("mason").setup()
+	require("mason-nvim-dap").setup({
+		automatic_installation = true,
+		automatic_setup = true,
+	})
+	require 'mason-nvim-dap'.setup_handlers {}
+
+			dap.configurations.typescript = {
+				{
+					name = "Attach to process",
+					type = "node2",
+					request = "attach",
+					processId = require("dap.utils").pick_process,
+					sourceMaps = true,
+					restart = true,
+				},
+				{
+					name = "Launch",
+					type = "node2",
+					request = "launch",
+					program = "${workspaceFolder}/dist/app.js",
+					sourceMaps = true,
+					cwd = vim.fn.getcwd(),
+					protocol = "inspector",
+					outFiles = { "${workspaceFolder}/dist/*.js" },
+				},
+			}
+
+		-- debugger_path = vim.fn.stdpath('data') .. '/mason/packages/js-debug-adapter',
+EOF
+endif
+
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
