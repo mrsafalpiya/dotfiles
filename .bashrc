@@ -12,10 +12,14 @@ if [ -d ~/.local/bin ]; then
 fi
 
 # Adds $GOPATH folder to $PATH
-export PATH="$PATH:$HOME/go/bin"
+export GOPATH=$HOME/go
+export PATH="$PATH:$GOPATH/bin"
 
 # Adds cargo bin to $PATH
 export PATH="$PATH:$HOME/.cargo/bin"
+
+# Adds composer bin to $PATH
+export PATH="$PATH:$HOME/.config/composer/vendor/bin"
 
 # Defining programs
 export EDITOR="nvim"
@@ -72,7 +76,7 @@ HISTSIZE= #
 #  / ___ \| |___ | | / ___ \ ___) | |___ ___) |
 # /_/   \_\_____|___/_/   \_\____/|_____|____/
 
-alias vim="nvim"
+alias vim=nvim
 
 # Verbosity and settings that you pretty much just always are going to want.
 alias \
@@ -94,7 +98,7 @@ alias \
 # Useful
 alias \
 	o="xdg-open" \
-	smic="ls config.def.h && rm -f config.h; sudo make install clean" \
+	smic="make clean && rm -f config.h && make && sudo make install" \
 	glog="git log --oneline --abbrev-commit --all --graph --decorate --color" \
 	qcd="source quickcd" \
 	?="google-search" \

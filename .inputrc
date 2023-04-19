@@ -1,5 +1,2 @@
-# Use Vi, not Emacs, style editing
-set editing-mode vi
-
 # Sets auto completion to ignore case
 set completion-ignore-case On
