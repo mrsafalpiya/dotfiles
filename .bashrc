@@ -48,18 +48,81 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 [[ $- != *i* ]] && return
 
 # Prompt Configuration
-COL_B_RED='\[\e[1;31m\]'
-COL_B_CYAN='\[\e[1;36m\]'
-COL_RESET='\[\033[0m\]'
+source ~/.git-prompt.sh  # curl -o ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
+export GIT_PS1_SHOWDIRTYSTATE="true"
+export GIT_PS1_SHOWSTASHSTATE="true"
+export GIT_PS1_SHOWUNTRACKEDFILES="true"
+export GIT_PS1_SHOWUPSTREAM="auto"
 
-PS1="\$(VALU="\$?" ; if [ \$VALU == 0 ]; then printf \"$COL_B_CYAN\"; else printf \"$COL_B_RED\"; fi)"
-PS1+="\w "
-PS1+="\$ "
-PS1+="$COL_RESET"
+function timer_now {
+    date +%s%N
+}
 
-# Print newline AFTER executing a command
-PROMPT_COMMAND="export PROMPT_COMMAND=echo"
-alias clear="unset PROMPT_COMMAND; clear; PROMPT_COMMAND='export PROMPT_COMMAND=echo'"
+function timer_start {
+    timer_start=${timer_start:-$(timer_now)}
+}
+
+function timer_stop {
+    local delta_us=$((($(timer_now) - $timer_start) / 1000))
+    local us=$((delta_us % 1000))
+    local ms=$(((delta_us / 1000) % 1000))
+    local s=$(((delta_us / 1000000) % 60))
+    local m=$(((delta_us / 60000000) % 60))
+    local h=$((delta_us / 3600000000))
+    # Goal: always show around 3 digits of accuracy
+    if ((h > 0)); then timer_show=${h}h${m}m
+    elif ((m > 0)); then timer_show=${m}m${s}s
+    elif ((s >= 10)); then timer_show=${s}.$((ms / 100))s
+    elif ((s > 0)); then timer_show=${s}.$(printf %03d $ms)s
+    elif ((ms >= 100)); then timer_show=${ms}ms
+    elif ((ms > 0)); then timer_show=${ms}.$((us / 100))ms
+    else timer_show=${us}us
+    fi
+    unset timer_start
+}
+
+
+set_prompt () {
+	LAST_STATUS=$?
+
+	COL_RED='\[\e[0;31m\]'
+	COL_B_RED='\[\e[1;31m\]'
+	COL_CYAN='\[\e[0;36m\]'
+	COL_B_CYAN='\[\e[1;36m\]'
+	COL_RED='\[\e[0;31m\]'
+	COL_RED_BG='\[\e[1;41m\]'
+	COL_GREEN='\[\e[0;32m\]'
+	COL_GREEN_BG='\[\e[1;43m\]'
+	COL_WHITE='\[\e[1;37m\]'
+	COL_BLACK='\[\e[1;30m\]'
+	COL_RESET='\[\033[0m\]'
+
+	timer_stop
+
+	PS1="\$(if [ \${PIPESTATUS[-1]} == 0 ]; then printf \"$COL_B_CYAN\"; else printf \"$COL_B_RED\"; fi)"
+	PS1+="\w "
+
+	if [ -n "$(jobs -p)" ]; then
+		PS1+="$COL_BLACK$COL_GREEN_BG \j $COL_RESET "
+		PS1+="\$(if [ \${PIPESTATUS[-1]} == 0 ]; then printf \"$COL_B_CYAN\"; else printf \"$COL_B_RED\"; fi)"
+	fi
+
+	PS1+="\$(LAST_EXIT_CODE=\"\${PIPESTATUS[-1]}\"; if [ \$LAST_EXIT_CODE != 0 ]; then printf \"$COL_RED_BG$COL_WHITE \$LAST_EXIT_CODE $COL_RESET \"; fi)"
+	PS1+="\$(if [ \${PIPESTATUS[-1]} == 0 ]; then printf \"$COL_CYAN\"; else printf \"$COL_RED\"; fi)"
+
+	PS1+="$timer_show "
+
+	PS1+="\$(if [ \${PIPESTATUS[-1]} == 0 ]; then printf \"$COL_CYAN\"; else printf \"$COL_RED\"; fi)"
+	PS1+="$(printf $COL_GREEN)"
+	PS1+='$(__git_ps1 "[%s]")'
+	PS1+="\$(if [ \${PIPESTATUS[-1]} == 0 ]; then printf \"$COL_B_CYAN\"; else printf \"$COL_B_RED\"; fi)"
+	PS1+="\n\$ "
+	PS1+="$(printf $COL_RESET)"
+}
+
+trap 'timer_start' DEBUG
+PROMPT_COMMAND="export PROMPT_COMMAND=\"echo; set_prompt\"; set_prompt"
+alias clear="unset PROMPT_COMMAND; clear; PROMPT_COMMAND='export PROMPT_COMMAND=\"echo; set_prompt\"; set_prompt'"
 
 # Disable ctrl-s and ctrl-q
 stty -ixon
