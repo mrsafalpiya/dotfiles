@@ -1,0 +1,8 @@
+#!/bin/sh
+
+setsid -f wine ~/.wine/drive_c/Program\ Files/Microsoft\ Office/Office12/WINWORD.EXE >/dev/null 2>&1
+
+if [ $# -gt 0 ]
+then
+	dragon-drop "$@"
+fi
