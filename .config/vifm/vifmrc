@@ -143,14 +143,15 @@ fileviewer <font/*>
 
 command! FZFSubDirs :set noquickview
                   \| let $FZF_PICK = term("fd -H --color always | fzf --ansi --tac --preview '[ -f {} ] && bat {} || ls {}' 2>/dev/tty")
+                  \| let $CUR_DIR = term("pwd")
                   \| if $FZF_PICK != ''
-                  \|     execute system('[ -f "$FZF_PICK" ] && echo goto || echo cd') fnameescape($FZF_PICK)
+                  \|     execute system('[ -f "$FZF_PICK" ] && echo goto || echo cd') fnameescape($FZF_PICK) | execute system('[ -f "$CUR_DIR/$FZF_PICK" ] && echo "normal l"')
                   \| endif
 nnoremap <C-e> :FZFSubDirs<CR>
 
 command! FZFCurrentDir :set noquickview
                   \| let $FZF_PICK = term("fd -H --max-depth 1 --color always | sort | fzf --ansi --tac --preview '[ -f {} ] && bat {} || ls {}' 2>/dev/tty")
                   \| if $FZF_PICK != ''
-                  \|     execute system('[ -f "$FZF_PICK" ] && echo goto || echo cd') fnameescape($FZF_PICK)
+                  \|     execute system('[ -f "$FZF_PICK" ] && echo goto || echo cd') fnameescape($FZF_PICK) | execute system('[ -f "$FZF_PICK" ] && echo "normal l"')
                   \| endif
 nnoremap <C-f> :FZFCurrentDir<CR>
