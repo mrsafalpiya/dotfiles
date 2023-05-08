@@ -24,6 +24,7 @@ nmap <silent> <leader>v :Vifm<CR>
 
 Plug 'sbdchd/neoformat'
 let g:neoformat_enabled_css = ['prettier']
+let g:neoformat_try_node_exe = 1
 nmap <silent> <leader>f :Neoformat<CR>
 
 " Writing
@@ -320,11 +321,11 @@ inoremap <expr> <CR> InsertMapForEnter()
 function! InsertMapForEnter()
 	if pumvisible()
 		return "\<C-y>"
-	elseif strcharpart(getline('.'),getpos('.')[2]-1,1) == ')'
+	elseif (strcharpart(getline('.'),getpos('.')[2]-2,1) == '(') && (strcharpart(getline('.'),getpos('.')[2]-1,1) == ')')
 		return "\<CR>\<Esc>O"
-	elseif strcharpart(getline('.'),getpos('.')[2]-1,1) == '}'
+	elseif (strcharpart(getline('.'),getpos('.')[2]-1,1) == '{') && (strcharpart(getline('.'),getpos('.')[2]-1,1) == '}')
 		return "\<CR>\<Esc>O"
-	elseif strcharpart(getline('.'),getpos('.')[2]-1,1) == ']'
+	elseif (strcharpart(getline('.'),getpos('.')[2]-1,1) == '[') && (strcharpart(getline('.'),getpos('.')[2]-1,1) == ']')
 		return "\<CR>\<Esc>O"
 	elseif strcharpart(getline('.'),getpos('.')[2]-1,2) == '</'
 		return "\<CR>\<Esc>O"
@@ -360,6 +361,11 @@ augroup prettier_filetype
 	autocmd!
 	let b:prettier_ft = ['html', 'css', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'svelte']
 	execute "autocmd FileType " . join(b:prettier_ft, ",") . " setlocal expandtab shiftwidth=2 tabstop=2"
+
+	let g:neoformat_enabled_javascript      = ['prettiereslint', 'prettier']
+	let g:neoformat_enabled_typescript      = ['prettiereslint', 'prettier']
+	let g:neoformat_enabled_javascriptreact = ['prettiereslint', 'prettier']
+	let g:neoformat_enabled_typescriptreact = ['prettiereslint', 'prettier']
 augroup END
 
 " Indentation settings for djlint
