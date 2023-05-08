@@ -138,3 +138,19 @@ fileviewer <font/*>
 			\ vifmimg font %px %py %pw %ph %c
 			\ %pc
 			\ vifmimg clear
+
+" FZF
+
+command! FZFSubDirs :set noquickview
+                  \| let $FZF_PICK = term("fd -H --color always | fzf --ansi --tac --preview 'ls {}' 2>/dev/tty")
+                  \| if $FZF_PICK != ''
+                  \|     execute system('[ -f "$FZF_PICK" ] && echo goto || echo cd') fnameescape($FZF_PICK)
+                  \| endif
+nnoremap <C-e> :FZFSubDirs<CR>
+
+command! FZFCurrentDir :set noquickview
+                  \| let $FZF_PICK = term("fd -H --max-depth 1 --color always | sort | fzf --ansi --tac --preview 'ls {}' 2>/dev/tty")
+                  \| if $FZF_PICK != ''
+                  \|     execute system('[ -f "$FZF_PICK" ] && echo goto || echo cd') fnameescape($FZF_PICK)
+                  \| endif
+nnoremap <C-f> :FZFCurrentDir<CR>
