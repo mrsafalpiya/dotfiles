@@ -38,6 +38,9 @@ export LIBVA_DRIVER_NAME="i965"
 # Fix java applications in dwm
 export _JAVA_AWT_WM_NONREPARENTING=1
 
+# Better font in java applications
+export JDK_JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
+
 #   ____ _____ _   _ _____ ____      _    _
 #  / ___| ____| \ | | ____|  _ \    / \  | |
 # | |  _|  _| |  \| |  _| | |_) |  / _ \ | |
@@ -58,8 +61,10 @@ function timer_now {
     date +%s%N
 }
 
-function timer_start {
+function timer_start_func {
+    local old_=$1
     timer_start=${timer_start:-$(timer_now)}
+    : "$old_"
 }
 
 function timer_stop {
@@ -120,7 +125,7 @@ set_prompt () {
 	PS1+="$(printf $COL_RESET)"
 }
 
-trap 'timer_start' DEBUG
+trap 'timer_start_func "$_"' DEBUG
 PROMPT_COMMAND="export PROMPT_COMMAND=\"echo; set_prompt\"; set_prompt"
 alias clear="unset PROMPT_COMMAND; clear; PROMPT_COMMAND='export PROMPT_COMMAND=\"echo; set_prompt\"; set_prompt'"
 
