@@ -390,6 +390,15 @@ augroup php_filetype
 	execute "autocmd FileType " . join(b:php_ft, ",") . " setlocal autoindent expandtab shiftwidth=4 tabstop=4"
 augroup END
 
+" Identation settings for java
+augroup java_filetype
+	autocmd!
+	let b:java_ft = ['java']
+	execute "autocmd FileType " . join(b:java_ft, ",") . " setlocal autoindent expandtab shiftwidth=2 tabstop=2"
+
+	let g:neoformat_enabled_java = ['prettier']
+augroup END
+
 " -----------------------------------------------------------------------------
 " |                                  Lua                                      |
 " -----------------------------------------------------------------------------
