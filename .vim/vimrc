@@ -18,6 +18,7 @@ Plug 'tpope/vim-repeat'
 Plug 'andymass/vim-matchup'
 Plug 'mbbill/undotree'
 Plug 'machakann/vim-highlightedyank'
+Plug 'jiangmiao/auto-pairs'
 
 Plug 'vifm/vifm.vim'
 nmap <silent> <leader>v :Vifm<CR>
@@ -30,6 +31,8 @@ nmap <silent> <leader>f :Neoformat<CR>
 " Writing
 " -------
 
+Plug 'vimwiki/vimwiki'
+let g:vimwiki_ext2syntax = {}  " Enable vimwiki only for .wiki files
 Plug 'vim-pandoc/vim-pandoc'
 let g:pandoc#keyboard#display_motions = 0  " Disable j and k bind as gj and gk
 Plug 'vim-pandoc/vim-pandoc-syntax'
@@ -76,89 +79,35 @@ Plug 'maxmellon/vim-jsx-pretty'
 " LSP
 " ---
 
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
+Plug 'neovim/nvim-lspconfig'
 
-let g:coc_user_config = {}
-let g:coc_user_config['suggest.triggerAfterInsertEnter'] = v:true
-let g:coc_user_config['html.autoCreateQuotes'] = v:false
-let g:coc_user_config['svelte.plugin.html.tagComplete.enable'] = v:true
-let g:coc_user_config['svelte.enable-ts-plugin'] = v:true
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
 
-let g:coc_user_config['react-refactor.produceClass'] = v:false
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
 
-let g:coc_user_config['coc.source.file.enable'] = v:false
-let g:coc_user_config['coc.source.buffer.enable'] = v:false
-let g:coc_user_config['coc.source.around.enable'] = v:false
-
-let b:coc_disabled_sources = ['around', 'buffer', 'file']
-
-" Use <c-space> to trigger completion.
-if has('nvim')
-	inoremap <silent><expr> <c-space> coc#refresh()
-else
-	inoremap <silent><expr> <c-@> coc#refresh()
-endif
-inoremap <silent><expr> <backspace> coc#pum#visible() ? "\<bs>\<c-r>=coc#start()\<CR>" : "\<bs>"
-" Make sure floating windows are closed on ctrl c
-imap <silent> <C-c> <C-c>:call coc#float#close_all()<CR>
-
-nmap <silent> [d <Plug>(coc-diagnostic-prev)
-nmap <silent> ]d <Plug>(coc-diagnostic-next)
-nmap <silent> <leader>ca <Plug>(coc-codeaction-cursor)
-
-nnoremap <silent> K :call ShowDocumentation()<CR>
-function! ShowDocumentation()
-	if CocAction('hasProvider', 'hover')
-		call CocActionAsync('doHover')
-	else
-		call feedkeys('K', 'in')
-	endif
-endfunction
-" Remap <C-f> and <C-b> to scroll float windows/popups
-if has('nvim-0.4.0') || has('patch-8.2.0750')
-	nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-	nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-	inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-	inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-	vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-	vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-endif
-
-nmap <leader>rn <Plug>(coc-rename)
-
-nmap <silent> <leader>gd <Plug>(coc-definition)
-nmap <silent> <leader>gD <Plug>(coc-type-definition)
-nmap <silent> <leader>gi <Plug>(coc-implementation)
-nmap <silent> <leader>gr <Plug>(coc-references)
-nmap <silent> <leader>k :silent call CocActionAsync('highlight')<CR>
-
-let g:coc_global_extensions = [
-			\ "coc-json",
-			\ "coc-yaml",
-			\ "coc-html",
-			\ "coc-css",
-			\ "coc-tsserver",
-			\ "coc-eslint",
-			\ "coc-react-refactor",
-			\ "coc-go",
-			\ "coc-pyright",
-			\ "coc-clangd",
-			\ "@yaegassy/coc-tailwindcss3",
-			\ "coc-svelte",
-			\ "coc-docker",
-			\ "coc-sql",
-			\ ]
+" Plug 'honza/vim-snippets'
+" Plug 'mlaursen/vim-react-snippets'
 
 if has('nvim')
+	Plug 'nvim-lua/plenary.nvim'
+	Plug 'nvim-telescope/telescope.nvim'
+	nnoremap <leader>ff <cmd>Telescope find_files<cr>
+	nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+	nnoremap <leader>fb <cmd>Telescope buffers<cr>
+
 	Plug 'norcalli/nvim-colorizer.lua'
 
 	Plug 'lukas-reineke/indent-blankline.nvim'
 	nnoremap <silent> <leader>i :IndentBlanklineToggle<CR>
-	let g:indent_blankline_enabled = v:false
+	" let g:indent_blankline_enabled = v:false
 	let g:indent_space_char_blankline = ' '
 
 	Plug 'mfussenegger/nvim-dap'
-	lua vim.fn.sign_define('DapBreakpoint', {text='🛑', texthl='', linehl='', numhl=''})
+	lua vim.fn.sign_define('DapBreakpoint', {text='🔴', texthl='', linehl='', numhl=''})
 	lua vim.fn.sign_define('DapBreakpointCondition', {text = '🔵', texthl = '', linehl = '', numhl = ''})
 	lua vim.fn.sign_define('DapBreakpointRejected', {text = '🟠', texthl = '', linehl = '', numhl = ''})
 	lua vim.fn.sign_define('DapStopped', {text = '▶', texthl = 'DiffAdd', linehl = '', numhl = ''})
@@ -213,6 +162,7 @@ autocmd BufEnter * setlocal nosmartindent nocindent indentexpr= indentkeys=
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 set mouse=  " Disable any mouse support
+set updatetime=100
 
 " Wildmenu
 " --------
@@ -359,7 +309,7 @@ augroup END
 " Indentation settings for filetypes using prettier
 augroup prettier_filetype
 	autocmd!
-	let b:prettier_ft = ['html', 'css', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'svelte']
+	let b:prettier_ft = ['html', 'css', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'svelte', 'prisma']
 	execute "autocmd FileType " . join(b:prettier_ft, ",") . " setlocal expandtab shiftwidth=2 tabstop=2"
 
 	let g:neoformat_enabled_javascript      = ['prettiereslint', 'prettier']
@@ -403,6 +353,131 @@ augroup END
 " |                                  Lua                                      |
 " -----------------------------------------------------------------------------
 
+" Mason
+
+lua <<EOF
+require("mason").setup()
+require("mason-lspconfig").setup()
+EOF
+
+" nvim cmp
+
+lua <<EOF
+local cmp = require'cmp'
+
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      vim.fn["vsnip#anonymous"](args.body)
+    end,
+  },
+  window = {
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered(),
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+  }),
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'vsnip' },
+  })
+})
+
+local lspconfig = require('lspconfig')
+local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+require('mason-lspconfig').setup_handlers({
+  function(server_name)
+    lspconfig[server_name].setup({
+      capabilities = lsp_capabilities,
+    })
+  end,
+})
+
+-- Global mappings.
+-- See `:help vim.diagnostic.*` for documentation on any of the below functions
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+
+-- Use LspAttach autocommand to only map the following keys
+-- after the language server attaches to the current buffer
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    local opts = { buffer = ev.buf }
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wl', function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, opts)
+    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
+    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+  end,
+})
+EOF
+
+" Extra LSP config
+
+if has('nvim')
+lua <<EOF
+-- Set border on windows
+
+local _border = "single"
+
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+  vim.lsp.handlers.hover, {
+    border = _border
+  }
+)
+
+vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
+  vim.lsp.handlers.signature_help, {
+    border = _border
+  }
+)
+
+vim.diagnostic.config{
+  float={border=_border}
+}
+
+require('lspconfig.ui.windows').default_options = {
+  border = _border
+}
+
+-- Disable underline on diagnostics
+vim.lsp.handlers["textDocument/publishDiagnostics"] =
+  vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics,
+  {
+    virtual_text = false
+  }
+)
+
+-- Custom diagnostic icons
+local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+for type, icon in pairs(signs) do
+  local hl = "DiagnosticSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
+EOF
+endif
+
+" Other plugins
+
 if has('nvim')
 lua <<EOF
 	-- Colorizer
@@ -417,6 +492,22 @@ lua <<EOF
 	dap.listeners.after.event_initialized["dapui_config"] = function()
 		dapui.open()
 	end
+
+vim.cmd [[highlight IndentBlanklineIndent1 guibg=#1f1f1f gui=nocombine]]
+vim.cmd [[highlight IndentBlanklineIndent2 guibg=none gui=nocombine]]
+
+require("indent_blankline").setup {
+    char = "",
+    char_highlight_list = {
+        "IndentBlanklineIndent1",
+        "IndentBlanklineIndent2",
+    },
+    space_char_highlight_list = {
+        "IndentBlanklineIndent1",
+        "IndentBlanklineIndent2",
+    },
+    show_trailing_blankline_indent = false,
+}
 EOF
 
 lua <<EOF
