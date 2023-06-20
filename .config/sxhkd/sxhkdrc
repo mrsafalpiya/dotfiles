@@ -42,7 +42,7 @@ super + ctrl + c
 # = ETC =
 # Browser
 super + w
-	$BROWSER --use-gl=desktop --enable-features=VaapiVideoDecoder --disable-features=UseChromeOSDirectVideoDecoder
+	cat ~/.config/chromium-flags.conf | grep '^\(#.*\)\?$' -v | xargs $BROWSER
 # ncmpcpp
 alt + ctrl + m
 	st -c ncmpcppterm -e ncmpcpp
@@ -75,3 +75,7 @@ XF86Audio{Rewind,Forward}
 # quickpdf
 alt + ctrl + q
 	quickpdf
+
+# Toggle mpv playback
+ctrl + shift + p
+	xdotool key --window "$(xdotool search --class mpv)" p
