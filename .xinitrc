@@ -2,13 +2,21 @@
 xset dpms 0 0 0
 xset s off
 clipmenud &
-mpd &
 unclutter &
 sxhkd &
 dunst &
 flameshot &
+fixmouse &
+nm-applet &
+vattery &
+mpd &
+sleep 3; mpc update && mpc ls | mpc add &
 
 while true; do xsetroot -name "$(date -u +'%I:%M%p %Z') | $(date +'%I:%M%p %Z')"; sleep 60; done &
+
+hash tmux && st -e tmux new -s main &
+hash ncmpcpp && st -c ncmpcppterm -e ncmpcpp &
+hash google-chrome-stable && cat ~/.config/chromium-flags.conf | grep '^\(#.*\)\?$' -v | xargs google-chrome-stable &
 
 # Start dwm
 exec dwm
