@@ -1,18 +1,26 @@
 #!/bin/sh
 
-# = Mouse =
-mouse_devid=$(xinput | grep "USB OPTICAL MOUSE" | cut -d'=' -f 2 | cut -f 1)
-mouse_propid=$(xinput --list-props "$mouse_devid" | grep "libinput Accel Speed (" | cut -d'(' -f2 | cut -d')' -f1)
+TOUCHPAD="touchpad"
+MOUSE="mouse"
 
-# Tweak acceleration in mouse
-xinput --set-prop "$mouse_devid" "$mouse_propid" -1
+# = Mouse =
+mouse_devid=$(xinput | grep -i "$MOUSE" | cut -d'=' -f 2 | cut -f 1 | head -n 1)
+mouse_propid=$(xinput --list-props "$mouse_devid" | grep "libinput Accel Profile Enabled (" | cut -d'(' -f2 | cut -d')' -f1)
+
+xinput --set-prop "$mouse_devid" "$mouse_propid" 0, 1  # Acceleration
 
 # = Touchpad =
-touchpad_devid=$(xinput | grep "SynPS/2 Synaptics TouchPad" | cut -d'=' -f 2 | cut -f 1)
+touchpad_devid=$(xinput | grep -i "$TOUCHPAD" | cut -d'=' -f 2 | cut -f 1 | head -n 1)
+touchpad_accel_speed_propid=$(xinput --list-props "$touchpad_devid" | grep "libinput Accel Speed (" | cut -d'(' -f2 | cut -d')' -f1)
+touchpad_accel_prof_propid=$(xinput --list-props "$touchpad_devid" | grep "libinput Accel Profile Enabled (" | cut -d'(' -f2 | cut -d')' -f1)
 touchpad_tapping_propid=$(xinput --list-props "$touchpad_devid" | grep "libinput Tapping Enabled (" | cut -d'(' -f2 | cut -d')' -f1)
 touchpad_natural_scrolling_propid=$(xinput --list-props "$touchpad_devid" | grep "libinput Natural Scrolling Enabled (" | cut -d'(' -f2 | cut -d')' -f1)
 touchpad_disable_while_typing_propid=$(xinput --list-props "$touchpad_devid" | grep "libinput Disable While Typing Enabled (" | cut -d'(' -f2 | cut -d')' -f1)
+touchpad_scroll_distance_propid=$(xinput --list-props "$touchpad_devid" | grep "libinput Scrolling Pixel Distance (" | cut -d'(' -f2 | cut -d')' -f1)
 
-xinput --set-prop "$touchpad_devid" "$touchpad_tapping_propid" 1 # Tapping
-xinput --set-prop "$touchpad_devid" "$touchpad_natural_scrolling_propid" 1 # Natural scrolling
-xinput --set-prop "$touchpad_devid" "$touchpad_disable_while_typing_propid" 1 # Disable while typing
+xinput --set-prop "$touchpad_devid" "$touchpad_accel_speed_propid" 0.3         # Speed
+xinput --set-prop "$touchpad_devid" "$touchpad_accel_prof_propid" 0, 1         # Disable acceleration
+xinput --set-prop "$touchpad_devid" "$touchpad_tapping_propid" 1               # Tapping
+xinput --set-prop "$touchpad_devid" "$touchpad_natural_scrolling_propid" 1     # Natural scrolling
+xinput --set-prop "$touchpad_devid" "$touchpad_disable_while_typing_propid" 0  # Disable while typing
+xinput --set-prop "$touchpad_devid" "$touchpad_scroll_distance_propid" 50      # Disable while typing
