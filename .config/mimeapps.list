@@ -1,3 +1,4 @@
+
 [Default Applications]
 x-scheme-handler/postman=Postman.desktop
 application/fits=gimp.desktop
@@ -172,7 +173,6 @@ text/x-c++hdr=nvim.desktop
 text/x-c++src=nvim.desktop
 text/x-moc=nvim.desktop
 text/plain=nvim.desktop
-text/html=google-chrome.desktop
 video/3gpp=mpv.desktop
 video/dv=mpv.desktop
 video/x-matroska=mpv.desktop
@@ -191,3 +191,6 @@ video/mp2t=mpv.desktop
 video/mpeg=mpv.desktop
 video/ogg=mpv.desktop
 video/webm=mpv.desktop
+text/html=google-chrome.desktop
+x-scheme-handler/eclipse+command=_usr_lib_dbeaver_.desktop
+x-scheme-handler/mailto=google-chrome.desktop

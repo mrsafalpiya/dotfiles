@@ -33,13 +33,18 @@ export PAGER="less"
 export WM="dwm"
 
 # Proper VAAPI support
-export LIBVA_DRIVER_NAME="i965"
+export LIBVA_DRIVER_NAME="iHD"
 
 # Fix java applications in dwm
 export _JAVA_AWT_WM_NONREPARENTING=1
 
 # Better font in java applications
 export JDK_JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
+
+# Dark theme
+export GTK_THEME=Adwaita:dark
+export GTK2_RC_FILES=/usr/share/themes/Adwaita-dark/gtk-2.0/gtkrc
+export QT_STYLE_OVERRIDE=adwaita-dark
 
 #   ____ _____ _   _ _____ ____      _    _
 #  / ___| ____| \ | | ____|  _ \    / \  | |
@@ -160,7 +165,7 @@ alias \
 
 # yt-dlp
 alias \
-	yt="yt-dlp --add-metadata -i -S vcodec:h264" \
+	yt="yt-dlp --add-metadata -i" \
 	yta="yt -x -f bestaudio/best"
 
 # Useful
