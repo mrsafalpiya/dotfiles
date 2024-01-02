@@ -149,6 +149,7 @@ HISTSIZE= #
 #  / ___ \| |___ | | / ___ \ ___) | |___ ___) |
 # /_/   \_\_____|___/_/   \_\____/|_____|____/
 
+alias vi=vim
 alias vim=nvim
 
 # Verbosity and settings that you pretty much just always are going to want.

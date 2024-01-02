@@ -1,2 +1,5 @@
 # Sets auto completion to ignore case
 set completion-ignore-case On
+
+# Disable bell
+set bell-style none

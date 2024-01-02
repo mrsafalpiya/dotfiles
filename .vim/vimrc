@@ -1,205 +1,42 @@
-" -----------------------------------------------------------------------------
-" |                                Plugins                                    |
-" -----------------------------------------------------------------------------
-
-let g:mapleader = "\<Space>"  " Set leader key to space
-let maplocalleader=","        " Set local leader key to comma
-
-call plug#begin('~/.vim/plugged')
-
-" General
-" -------
-
-Plug 'mrsafalpiya/sp-plain-vim'
-Plug 'tpope/vim-commentary'
-Plug 'suy/vim-context-commentstring'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
-Plug 'andymass/vim-matchup'
-Plug 'mbbill/undotree'
-Plug 'machakann/vim-highlightedyank'
-
-Plug 'vifm/vifm.vim'
-nmap <silent> <leader>v :Vifm<CR>
-
-Plug 'sbdchd/neoformat'
-let g:neoformat_enabled_css = ['prettier']
-let g:neoformat_try_node_exe = 1
-nmap <silent> <leader>f :Neoformat<CR>
-
-" Writing
-" -------
-
-Plug 'vimwiki/vimwiki'
-let g:vimwiki_ext2syntax = {}  " Enable vimwiki only for .wiki files
-Plug 'vim-pandoc/vim-pandoc'
-let g:pandoc#keyboard#display_motions = 0  " Disable j and k bind as gj and gk
-Plug 'vim-pandoc/vim-pandoc-syntax'
-
-Plug 'lervag/vimtex'
-let g:vimtex_indent_enabled = v:false  " Disable vimtex indentation
-
-" Frontend
-" --------
-
-Plug 'mattn/emmet-vim'
-let g:user_emmet_leader_key='<C-Q>'
-let g:user_emmet_settings = {
-			\  'variables': {'lang': 'en'},
-			\  'html': {
-			\    'empty_element_suffix': ' />',
-			\    'default_attributes': {
-			\      'option': {'value': v:null},
-			\      'textarea': {'id': v:null, 'name': v:null, 'cols': 10, 'rows': 10},
-			\    },
-			\    'snippets': {
-			\      'html:5': "<!DOCTYPE html>\n"
-			\              ."<html lang=\"${lang}\">\n"
-			\              ."  <head>\n"
-			\              ."    <meta charset=\"${charset}\" />\n"
-			\              ."    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n"
-			\              ."    <title></title>\n"
-			\              ."  </head>\n"
-			\              ."  <body>\n"
-			\              ."    ${child}|\n"
-			\              ."  </body>\n"
-			\              ."</html>",
-			\    },
-			\  },
-			\  'javascript' : {
-			\      'extends' : 'jsx',
-			\  },
-			\}
-
-Plug 'evanleck/vim-svelte', {'branch': 'main'}
-Plug 'pangloss/vim-javascript'  " Required for proper vim-svelte's highlight
-Plug 'maxmellon/vim-jsx-pretty'
-
-" LSP
-" ---
-
-Plug 'williamboman/mason.nvim'
-Plug 'williamboman/mason-lspconfig.nvim'
-Plug 'neovim/nvim-lspconfig'
-
-Plug 'hrsh7th/nvim-cmp'
-Plug 'hrsh7th/cmp-nvim-lsp'
-
-Plug 'hrsh7th/cmp-vsnip'
-Plug 'hrsh7th/vim-vsnip'
-
-Plug 'ray-x/lsp_signature.nvim'
-
-" Plug 'honza/vim-snippets'
-" Plug 'mlaursen/vim-react-snippets'
-
-if has('nvim')
-	Plug 'windwp/nvim-autopairs'
-
-	Plug 'nvim-lua/plenary.nvim'
-	Plug 'nvim-telescope/telescope.nvim'
-	nnoremap <leader>ff <cmd>Telescope find_files<cr>
-	nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-	nnoremap <leader>fb <cmd>Telescope buffers<cr>
-
-	Plug 'norcalli/nvim-colorizer.lua'
-
-	Plug 'lukas-reineke/indent-blankline.nvim'
-	nnoremap <silent> <leader>i :IndentBlanklineToggle<CR>
-	" let g:indent_blankline_enabled = v:false
-	let g:indent_space_char_blankline = ' '
-
-	Plug 'mfussenegger/nvim-dap'
-	lua vim.fn.sign_define('DapBreakpoint', {text='🔴', texthl='', linehl='', numhl=''})
-	lua vim.fn.sign_define('DapBreakpointCondition', {text = '🔵', texthl = '', linehl = '', numhl = ''})
-	lua vim.fn.sign_define('DapBreakpointRejected', {text = '🟠', texthl = '', linehl = '', numhl = ''})
-	lua vim.fn.sign_define('DapStopped', {text = '▶', texthl = 'DiffAdd', linehl = '', numhl = ''})
-
-	nnoremap <silent> <A-b> <Cmd>lua require("dap").toggle_breakpoint()<CR>
-	nnoremap <silent> <leader>cb <Cmd>lua require("dap").clear_breakpoints()<CR>
-	nnoremap <silent> <A-c> <Cmd>lua require("dap").continue()<CR>
-	nnoremap <silent> <A-i> <Cmd>lua require("dap").step_into()<CR>
-	nnoremap <silent> <A-n> <Cmd>lua require("dap").step_over()<CR>
-	nnoremap <silent> <A-o> <Cmd>lua require("dap").step_out()<CR>
-	nnoremap <silent> <A-r> <Cmd>lua require("dap").restart()<CR>
-	nnoremap <silent> <A-s> <Cmd>lua require("dap").disconnect()<CR> \| <Cmd>lua require("dapui").close()<CR>
-	nnoremap <silent> <A-j> <Cmd>lua require("dap").run_to_cursor()<CR>
-	nnoremap <silent> <A-l> <Cmd>lua require("dap").run_last()<CR>
-
-	Plug 'williamboman/mason.nvim'
-
-	Plug 'rcarriga/nvim-dap-ui'
-	nnoremap <silent> <C-k> <Cmd>lua require("dapui").eval()<CR>
-	nnoremap <silent> <leader>du <Cmd>lua require("dapui").toggle()<CR>
-
-	Plug 'mxsdev/nvim-dap-vscode-js'
-
-	Plug 'leoluz/nvim-dap-go'
-	nnoremap <silent> <leader>dt <Cmd>lua require("dap-go").debug_test()<CR>
-	nnoremap <silent> <leader>dl <Cmd>lua require("dap-go").debug_last_test()<CR>
-
-	Plug 'mfussenegger/nvim-dap-python'
-endif
-
-call plug#end()
-
-" -----------------------------------------------------------------------------
-" |                                General                                    |
-" -----------------------------------------------------------------------------
-
-set path=.,**              " Set path to current directory along with sub directories
-
-set clipboard=unnamed      " Set clipboard to primary selection
-
-set lazyredraw             " Lazily redraw screen while executing macros, registers etc
-set undofile               " Undo file
-set hidden                 " Enable changing buffers without saving current
-
-filetype plugin indent on  " Load filetype specific plugins and indentations
-set autoindent             " Set indentation same as the previous line
-set fileformat=unix
-
-" Disable any auto indentations
-autocmd BufEnter * setlocal nosmartindent nocindent indentexpr= indentkeys=
-" Disable auto commenting
-autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-
-set mouse=  " Disable any mouse support
+set path=.,**
+set lazyredraw
+set undofile
+set smartindent
 set updatetime=100
-
-" Wildmenu
-" --------
-
-set wildmenu                                       " Enable wildmenu
-set wildignorecase                                 " Case in-sensitive wildmenu selection
-" Don't offer to open certain files/directories
+set wildignorecase
 set wildignore+=**/node_modules/**,**/dist/**,**/.git/**,**/*.o,**/venv/**,**/vendor/**
 " Give files with no extension a lower priority when it comes to matching
 " wildcards (To avoid opening executables accidently)
 set suffixes+=,,
 
-" Searching
-" ---------
+" Disable auto commenting
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
-set incsearch     " Search as you type
-set hlsearch      " Highlight search matches
-set shortmess-=S  " Enable search count message
 set ignorecase    " Case in-sensitive search
 set smartcase     " Smart case sensitive search
 set infercase     " Case in-sensitive insert-completion
 
-" -----------------------------------------------------------------------------
-" |                              Appearance                                   |
-" -----------------------------------------------------------------------------
+" set number
+" set relativenumber
+set termguicolors
+set background=dark
+set laststatus=0
+set signcolumn=no
+set mouse=
+set guicursor=a:block
+set cursorline
 
-" Interface
-" ---------
+set nowrap             " Disable line wraping
+set linebreak          " Wrap whole word
+let &showbreak = '↳ '  " Character to show on the next line of a line wrap
 
-set number             " Show line numbers
-set relativenumber     " Show relative line numbers
-set guicursor=a:block  " Set cursor to block at all time
 set list               " Enable list mode
-set laststatus=0       " Disable statusline
+
+set clipboard=unnamed      " Set clipboard to primary selection
+set updatetime=300
+
+" Map ctrl-c to esc
+imap <C-c> <Esc>
 
 " Set proper listchars on every buffer load
 function SetListChars()
@@ -211,34 +48,6 @@ function SetListChars()
 endfunction
 autocmd BufEnter * call SetListChars()
 
-set signcolumn=yes
-
-" Code
-" ----
-
-set nowrap             " Disable line wraping
-set linebreak          " Wrap whole word
-let &showbreak = '↳ '  " Character to show on the next line of a line wrap
-
-" Colorscheme
-" -----------
-
-syntax on
-set termguicolors
-set background=dark
-colorscheme sp-plain
-
-" Fix `set termguicolors` for st
-let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-
-" -----------------------------------------------------------------------------
-" |                                 Hacks                                     |
-" -----------------------------------------------------------------------------
-
-" Set omnifunction to syntax completion
-set omnifunc=syntaxcomplete#Complete
-
 " Jump to guide character
 nmap <Space><Space> <Esc>/<++><Enter>:noh<CR>"_c4l
 
@@ -246,7 +55,7 @@ nmap <Space><Space> <Esc>/<++><Enter>:noh<CR>"_c4l
 nnoremap <leader>m :!make<CR>
 
 " Remove trailing whitespaces on pressing F5
-nnoremap <silent> <F5> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+" nnoremap <silent> <F5> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
 
 " Triger `autoread` when files changes on disk
 autocmd FocusGained,BufEnter,CursorHold,CursorHoldI *
@@ -260,408 +69,10 @@ function! SynGroup()
 	let l:s = synID(line('.'), col('.'), 1)
 	echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
 endfun
-nnoremap <F2> :call SynGroup()<CR>
+nnoremap <F6> :call SynGroup()<CR>
 
-" Show cursor line on leaving a split
-augroup CursorLineOnSplitLeave
-	autocmd!
-	autocmd VimEnter,WinEnter,BufWinEnter * setlocal nocursorline
-	autocmd WinLeave * setlocal cursorline
-augroup END
+" Highligh yanked text
+au TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=600}
 
-" Proper indentation between braces and tag
-inoremap <expr> <CR> InsertMapForEnter()
-function! InsertMapForEnter()
-	if pumvisible()
-		return "\<C-y>"
-	elseif (strcharpart(getline('.'),getpos('.')[2]-2,1) == '(') && (strcharpart(getline('.'),getpos('.')[2]-1,1) == ')')
-		return "\<CR>\<Esc>O"
-	elseif (strcharpart(getline('.'),getpos('.')[2]-2,1) == '{') && (strcharpart(getline('.'),getpos('.')[2]-1,1) == '}')
-		return "\<CR>\<Esc>O"
-	elseif (strcharpart(getline('.'),getpos('.')[2]-2,1) == '[') && (strcharpart(getline('.'),getpos('.')[2]-1,1) == ']')
-		return "\<CR>\<Esc>O"
-	elseif strcharpart(getline('.'),getpos('.')[2]-1,2) == '</'
-		return "\<CR>\<Esc>O"
-	else
-		return "\<CR>"
-	endif
-endfunction
-
-" Better indentation level on pressing 'S'
-nnoremap <expr> S line(".") != 1 && getline(".") =~ '^\s*$' && getline(line(".")-1) != '' ? ":execute 'normal! 0DkJ' \| call feedkeys('o')<CR>" : "S"
-
-" -----------------------------------------------------------------------------
-" |                           Filetype specific                               |
-" -----------------------------------------------------------------------------
-
-" Custom commands for document writings
-augroup writing_filetype
-	autocmd!
-	" Custom keybinds for pdfcompile and pdfcompileopen
-	autocmd FileType vimwiki,markdown,rmarkdown,troff,tex nnoremap <buffer> <leader>tp :!pdfcompile %<CR>
-	autocmd FileType vimwiki,markdown,rmarkdown,troff,tex nnoremap <buffer> <leader>op :silent !setsid -f pdfcompileopen %<CR>
-	" Enable spell checking by default
-	autocmd FileType vimwiki,markdown,rmarkdown,troff,tex setlocal spell
-	" Enable line wrap
-	autocmd FileType vimwiki,markdown,rmarkdown,troff,tex setlocal wrap
-	" Indentation size
-	autocmd FileType vimwiki,markdown,rmarkdown,troff,tex setlocal tabstop=4
-	autocmd FileType vimwiki,markdown,rmarkdown,troff,tex setlocal shiftwidth=4
-augroup END
-
-" Indentation settings for filetypes using prettier
-augroup prettier_filetype
-	autocmd!
-	let b:prettier_ft = ['html', 'css', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'svelte', 'prisma']
-	execute "autocmd FileType " . join(b:prettier_ft, ",") . " setlocal expandtab shiftwidth=2 tabstop=2"
-
-	let g:neoformat_enabled_javascript      = ['prettiereslint', 'prettier']
-	let g:neoformat_enabled_typescript      = ['prettiereslint', 'prettier']
-	let g:neoformat_enabled_javascriptreact = ['prettiereslint', 'prettier']
-	let g:neoformat_enabled_typescriptreact = ['prettiereslint', 'prettier']
-augroup END
-
-" Indentation settings for djlint
-augroup djlint_filetype
-	autocmd!
-	let b:djlint_ft = ['htmldjango']
-	execute "autocmd FileType " . join(b:djlint_ft, ",") . " setlocal expandtab shiftwidth=4 tabstop=4"
-augroup END
-
-" Identation and omni key in SQL ft
-augroup sql_filetype
-	autocmd!
-	let b:sql_ft = ['sql']
-	execute "autocmd FileType " . join(b:sql_ft, ",") . " setlocal expandtab shiftwidth=2 tabstop=2"
-	let g:ftplugin_sql_omni_key = '<C-k>'
-augroup END
-
-" Identation settings for php
-augroup php_filetype
-	autocmd!
-	let b:php_ft = ['php']
-	execute "autocmd FileType " . join(b:php_ft, ",") . " setlocal autoindent expandtab shiftwidth=4 tabstop=4"
-augroup END
-
-" Identation settings for java
-augroup java_filetype
-	autocmd!
-	let b:java_ft = ['java']
-	execute "autocmd FileType " . join(b:java_ft, ",") . " setlocal autoindent expandtab shiftwidth=2 tabstop=2"
-
-	let g:neoformat_enabled_java = ['prettier']
-augroup END
-
-" -----------------------------------------------------------------------------
-" |                                  Lua                                      |
-" -----------------------------------------------------------------------------
-
-" Mason
-
-lua <<EOF
-require("mason").setup()
-require("mason-lspconfig").setup()
-EOF
-
-" nvim cmp
-
-lua <<EOF
-local cmp = require'cmp'
-
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body)
-    end,
-  },
-  window = {
-    completion = cmp.config.window.bordered(),
-    documentation = cmp.config.window.bordered(),
-  },
-  mapping = cmp.mapping.preset.insert({
-    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.abort(),
-    ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-  }),
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'vsnip' },
-  })
-})
-
-local lspconfig = require('lspconfig')
-local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
-
-require('mason-lspconfig').setup_handlers({
-  function(server_name)
-    lspconfig[server_name].setup({
-      capabilities = lsp_capabilities,
-    })
-  end,
-})
-
--- Global mappings.
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
-vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
-
--- Use LspAttach autocommand to only map the following keys
--- after the language server attaches to the current buffer
-vim.api.nvim_create_autocmd('LspAttach', {
-  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
-  callback = function(ev)
-    local opts = { buffer = ev.buf }
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
-    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
-    vim.keymap.set('n', '<space>wl', function()
-      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, opts)
-    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
-    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
-    vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-  end,
-})
-EOF
-
-" Extra LSP config
-
-if has('nvim')
-lua <<EOF
-
--- LSP Signature
-
-require "lsp_signature".setup({
-  hint_prefix = "",
-  toggle_key = "<C-k>"
-})
-
--- Set border on windows
-
-local _border = "single"
-
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-  vim.lsp.handlers.hover, {
-    border = _border
-  }
-)
-
-vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-  vim.lsp.handlers.signature_help, {
-    border = _border
-  }
-)
-
-vim.diagnostic.config{
-  float={border=_border}
-}
-
-require('lspconfig.ui.windows').default_options = {
-  border = _border
-}
-
--- Disable underline on diagnostics
-vim.lsp.handlers["textDocument/publishDiagnostics"] =
-  vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics,
-  {
-    virtual_text = false
-  }
-)
-
--- Custom diagnostic icons
-local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-end
-EOF
-endif
-
-" Other plugins
-
-" nvim autopairs
-
-lua <<EOF
-require("nvim-autopairs").setup({
-	map_cr = false,
-})
-
--- Insert `(` on selection of function or method item in nvim-cmp
-local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-local cmp = require('cmp')
-cmp.event:on(
-  'confirm_done',
-  cmp_autopairs.on_confirm_done()
-)
-EOF
-
-if has('nvim')
-lua <<EOF
-	-- Colorizer
-	require'colorizer'.setup()
-
-	-- DAP
-	require("dapui").setup()
-	require('dap-go').setup()
-	require('dap-python').setup()
-
-	local dap, dapui = require("dap"), require("dapui")
-	dap.listeners.after.event_initialized["dapui_config"] = function()
-		dapui.open()
-	end
-
-vim.cmd [[highlight IndentBlanklineIndent1 guibg=#1f1f1f gui=nocombine]]
-vim.cmd [[highlight IndentBlanklineIndent2 guibg=none gui=nocombine]]
-
-require("indent_blankline").setup {
-    char = "",
-    char_highlight_list = {
-        "IndentBlanklineIndent1",
-        "IndentBlanklineIndent2",
-    },
-    space_char_highlight_list = {
-        "IndentBlanklineIndent1",
-        "IndentBlanklineIndent2",
-    },
-    show_trailing_blankline_indent = false,
-}
-EOF
-
-lua <<EOF
-require('dap-vscode-js').setup({
-  node_path = 'node',
-  debugger_path = os.getenv('HOME') .. '/dl/ext/vscode-js-debug',
-  adapters = { 'pwa-node', 'pwa-chrome', 'pwa-msedge', 'node-terminal', 'pwa-extensionHost' },
-})
-
-local exts = {
-  'javascript',
-  'typescript',
-  'javascriptreact',
-  'typescriptreact',
-  -- using pwa-chrome
-  'vue',
-  'svelte',
-}
-
-for i, ext in ipairs(exts) do
-  require("dap").configurations[ext] = {
-    {
-      type = 'pwa-node',
-      request = 'launch',
-      name = 'Launch Current File (pwa-node)',
-      cwd = vim.fn.getcwd(),
-      args = { '${file}' },
-      sourceMaps = true,
-      protocol = 'inspector',
-    },
-    {
-      type = 'pwa-node',
-      request = 'launch',
-      name = 'Launch Current File (pwa-node with ts-node)',
-      cwd = vim.fn.getcwd(),
-      runtimeArgs = { '--loader', 'ts-node/esm' },
-      runtimeExecutable = 'node',
-      args = { '${file}' },
-      sourceMaps = true,
-      protocol = 'inspector',
-      skipFiles = { '<node_internals>/**', 'node_modules/**' },
-      resolveSourceMapLocations = {
-        "${workspaceFolder}/**",
-        "!**/node_modules/**",
-      },
-    },
-    {
-      type = 'pwa-node',
-      request = 'launch',
-      name = 'Launch Current File (pwa-node with deno)',
-      cwd = vim.fn.getcwd(),
-      runtimeArgs = { 'run', '--inspect-brk', '--allow-all', '${file}' },
-      runtimeExecutable = 'deno',
-      attachSimplePort = 9229,
-    },
-    {
-      type = 'pwa-node',
-      request = 'launch',
-      name = 'Launch Test Current File (pwa-node with jest)',
-      cwd = vim.fn.getcwd(),
-      runtimeArgs = { '${workspaceFolder}/node_modules/.bin/jest' },
-      runtimeExecutable = 'node',
-      args = { '${file}', '--coverage', 'false'},
-      rootPath = '${workspaceFolder}',
-      sourceMaps = true,
-      console = 'integratedTerminal',
-      internalConsoleOptions = 'neverOpen',
-      skipFiles = { '<node_internals>/**', 'node_modules/**' },
-    },
-    {
-      type = 'pwa-node',
-      request = 'launch',
-      name = 'Launch Test Current File (pwa-node with vitest)',
-      cwd = vim.fn.getcwd(),
-      program = '${workspaceFolder}/node_modules/vitest/vitest.mjs',
-      args = { '--inspect-brk', '--threads', 'false', 'run', '${file}' },
-      autoAttachChildProcesses = true,
-      smartStep = true,
-      console = 'integratedTerminal',
-      skipFiles = { '<node_internals>/**', 'node_modules/**' },
-    },
-    {
-      type = 'pwa-node',
-      request = 'launch',
-      name = 'Launch Test Current File (pwa-node with deno)',
-      cwd = vim.fn.getcwd(),
-      runtimeArgs = { 'test', '--inspect-brk', '--allow-all', '${file}' },
-      runtimeExecutable = 'deno',
-      attachSimplePort = 9229,
-    },
-    {
-      type = 'pwa-chrome',
-      request = 'attach',
-      name = 'Attach Program (pwa-chrome = { port: 9222 })',
-      program = '${file}',
-      cwd = vim.fn.getcwd(),
-      sourceMaps = true,
-      port = 9222,
-      webRoot = '${workspaceFolder}',
-    },
-    {
-      type = 'node2',
-      request = 'attach',
-      name = 'Attach Program (Node2)',
-      processId = require('dap.utils').pick_process,
-    },
-    {
-      type = 'node2',
-      request = 'attach',
-      name = 'Attach Program (Node2 with ts-node)',
-      cwd = vim.fn.getcwd(),
-      sourceMaps = true,
-      skipFiles = { '<node_internals>/**' },
-      port = 9229,
-    },
-    {
-      type = 'pwa-node',
-      request = 'attach',
-      name = 'Attach Program (pwa-node)',
-      cwd = vim.fn.getcwd(),
-      processId = require('dap.utils').pick_process,
-      skipFiles = { '<node_internals>/**' },
-    },
-  }
-end
-EOF
-endif
-
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
+" Open current file with current line number in vscode
+command Code call system('code . --goto "' . expand('%') . '":' . line('.'))
