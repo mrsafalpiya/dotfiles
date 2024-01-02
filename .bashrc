@@ -169,6 +169,10 @@ alias \
 	yt="yt-dlp --add-metadata -i" \
 	yta="yt -x -f bestaudio/best"
 
+# tmux
+alias \
+    tns="tmux new -s"
+
 # Useful
 alias \
 	o="xdg-open" \
