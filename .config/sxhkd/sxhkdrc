@@ -23,6 +23,9 @@ alt + ctrl + {comma,period}
 	mpc {prev,next}
 
 # = UTILITIES =
+# Boomer
+super + z
+	boomer
 # Unicode picker
 super + semicolon
 	dmenuunicode
