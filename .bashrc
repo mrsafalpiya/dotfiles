@@ -128,6 +128,8 @@ set_prompt () {
 	PS1+="\$(if [ \${PIPESTATUS[-1]} == 0 ]; then printf \"$COL_B_CYAN\"; else printf \"$COL_B_RED\"; fi)"
 	PS1+="\n\$ "
 	PS1+="$(printf $COL_RESET)"
+
+	history -a;history -r
 }
 
 trap 'timer_start_func "$_"' DEBUG
