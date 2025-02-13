@@ -73,6 +73,22 @@ require("lazy").setup({
 		end
 	},
 	{
+		"rgroli/other.nvim",
+		config = function()
+			require("other-nvim").setup({
+				mappings = {
+					"livewire",
+					"angular",
+					"laravel",
+					"rails",
+					"golang",
+					"python",
+					"rust",
+				},
+			})
+		end
+	},
+	{
 		"sbdchd/neoformat",
 		config = function()
 			vim.cmd([[
@@ -307,7 +323,11 @@ require("lazy").setup({
 			vim.cmd("nnoremap <leader>u :UndotreeToggle<CR>")
 		end
 	},
-	"tpope/vim-sleuth",
+	-- "tpope/vim-sleuth",
+	{
+		"nmac427/guess-indent.nvim",
+		opts = {},
+	},
 	"jghauser/mkdir.nvim",
 	{
 		"NvChad/nvim-colorizer.lua",
@@ -382,38 +402,45 @@ require("lazy").setup({
 		},
 	},
 	{
-		"shellRaining/hlchunk.nvim",
-		event = { "BufReadPre", "BufNewFile" },
-		config = function()
-			require("hlchunk").setup({
-				chunk = {
-					enable = true,
-					delay = 1,
-					style = "#AAB1BE",
-				},
-				indent = {
-					enable = true,
-					style = "#3B4048",
-				},
-				-- line_num = {
-				-- 	enable = true,
-				-- 	style = "#707070",
-				-- },
-				-- blank = {
-				-- 	enable = true,
-				-- 	chars = {
-				-- 		" ",
-				-- 	},
-				-- 	style = {
-				-- 		{ bg = "#434437" },
-				-- 		{ bg = "#2f4440" },
-				-- 		{ bg = "#433054" },
-				-- 		{ bg = "#284251" },
-				-- 	},
-				-- },
-			})
-		end
+		"lukas-reineke/indent-blankline.nvim",
+		main = "ibl",
+		---@module "ibl"
+		---@type ibl.config
+		opts = {},
 	},
+	-- {
+	-- 	"shellRaining/hlchunk.nvim",
+	-- 	event = { "BufReadPre", "BufNewFile" },
+	-- 	config = function()
+	-- 		require("hlchunk").setup({
+	-- 			chunk = {
+	-- 				enable = true,
+	-- 				delay = 1,
+	-- 				style = "#AAB1BE",
+	-- 			},
+	-- 			indent = {
+	-- 				enable = true,
+	-- 				style = "#3B4048",
+	-- 			},
+	-- 			-- line_num = {
+	-- 			-- 	enable = true,
+	-- 			-- 	style = "#707070",
+	-- 			-- },
+	-- 			-- blank = {
+	-- 			-- 	enable = true,
+	-- 			-- 	chars = {
+	-- 			-- 		" ",
+	-- 			-- 	},
+	-- 			-- 	style = {
+	-- 			-- 		{ bg = "#434437" },
+	-- 			-- 		{ bg = "#2f4440" },
+	-- 			-- 		{ bg = "#433054" },
+	-- 			-- 		{ bg = "#284251" },
+	-- 			-- 	},
+	-- 			-- },
+	-- 		})
+	-- 	end
+	-- },
 	{
 		'nvim-lualine/lualine.nvim',
 		dependencies = { 'nvim-tree/nvim-web-devicons' },
@@ -436,30 +463,30 @@ require("lazy").setup({
 	{'williamboman/mason-lspconfig.nvim'},
 	{'VonHeikemen/lsp-zero.nvim', branch = 'v3.x'},
 	{'nvimtools/none-ls.nvim'},
-	{
-		"jay-babu/mason-null-ls.nvim",
-		event = { "BufReadPre", "BufNewFile" },
-		dependencies = {
-			"williamboman/mason.nvim",
-			"nvimtools/none-ls.nvim",
-		},
-		config = function()
-			local null_ls = require 'null-ls'
+	-- {
+	-- 	"jay-babu/mason-null-ls.nvim",
+	-- 	event = { "BufReadPre", "BufNewFile" },
+	-- 	dependencies = {
+	-- 		"williamboman/mason.nvim",
+	-- 		"nvimtools/none-ls.nvim",
+	-- 	},
+	-- 	config = function()
+	-- 		local null_ls = require 'null-ls'
 
-			require("mason-null-ls").setup({
-				ensure_installed = { "phpstan" },
-				automatic_installation = true,
-				automatic_setup = true,
-				handlers = {
-					phpstan = function(source_name, methods)
-						null_ls.register(null_ls.builtins.diagnostics.phpstan.with({
-							command = './vendor/phpstan/phpstan/phpstan',
-						}))
-					end,
-				},
-			})
-		end,
-	},
+	-- 		require("mason-null-ls").setup({
+	-- 			ensure_installed = { "phpstan" },
+	-- 			automatic_installation = true,
+	-- 			automatic_setup = true,
+	-- 			handlers = {
+	-- 				phpstan = function(source_name, methods)
+	-- 					null_ls.register(null_ls.builtins.diagnostics.phpstan.with({
+	-- 						command = './vendor/phpstan/phpstan/phpstan',
+	-- 					}))
+	-- 				end,
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- },
 	{'hrsh7th/cmp-nvim-lsp'},
 	{'hrsh7th/nvim-cmp'},
 	{'L3MON4D3/LuaSnip'},
@@ -610,19 +637,19 @@ require("lazy").setup({
 
 			-- Null ls
 
-			local null_ls = require('null-ls')
-			local null_opts = lsp_zero.build_options('null-ls', {})
+			-- local null_ls = require('null-ls')
+			-- local null_opts = lsp_zero.build_options('null-ls', {})
 
-			null_ls.setup({
-				debug = true,
-				on_attach = function(client, bufnr)
-					null_opts.on_attach(client, bufnr)
-					---
-					-- you can add other stuff here....
-					---
-				end,
-				sources = {}
-			})
+			-- null_ls.setup({
+			-- 	debug = true,
+			-- 	on_attach = function(client, bufnr)
+			-- 		null_opts.on_attach(client, bufnr)
+			-- 		---
+			-- 		-- you can add other stuff here....
+			-- 		---
+			-- 	end,
+			-- 	sources = {}
+			-- })
 		end,
 	},
 	{
@@ -769,14 +796,15 @@ require("lazy").setup({
 	-- 	dependencies = "nvim-treesitter/nvim-treesitter",
 	-- 	config = true,
 	-- },
-	-- {
-	-- 	'preservim/vim-markdown',
-	-- 	config = function()
-	-- 		vim.cmd([[
-	-- 		let g:vim_markdown_folding_disabled = 1
-	-- 		]])
-	-- 	end
-	-- },
+	{
+		'preservim/vim-markdown',
+		dependencies = { 'godlygeek/tabular' },
+		config = function()
+			vim.cmd([[
+			let g:vim_markdown_folding_disabled = 1
+			]])
+		end
+	},
 	-- {
 	-- 	'MeanderingProgrammer/markdown.nvim',
 	-- 	dependencies = { 'nvim-treesitter/nvim-treesitter' },
@@ -786,7 +814,6 @@ require("lazy").setup({
 	-- },
 	{
 		"OXY2DEV/markview.nvim",
-		branch = "dev",
 		dependencies = {
 			"nvim-treesitter/nvim-treesitter",
 			"nvim-tree/nvim-web-devicons"
@@ -794,23 +821,62 @@ require("lazy").setup({
 		config = function()
 			require("markview").setup({
 				modes = { "n", "i", "no", "c" },
-				hybrid_modes = { "i" },
+				hybrid_modes = { "n", "i" },
 
 				code_blocks = {
 					pad_amount = 0,
 				},
 
-				-- This is nice to have
-				callbacks = {
-					on_enable = function (_, win)
-						vim.wo[win].conceallevel = 2;
-						vim.wo[win].conecalcursor = "nc";
-					end
-				}
+				list_items = {
+					indent_size = 0,
+					shift_width = 0,
+					marker_minus = {
+						add_padding = false,
+					},
+					marker_plus = {
+						add_padding = false,
+					},
+					marker_star = {
+						add_padding = false,
+					},
+					marker_dot = {
+						add_padding = false,
+					},
+					marker_parenthasis = {
+						add_padding = false,
+					},
+				},
+
+				-- -- This is nice to have
+				-- callbacks = {
+				-- 	on_enable = function (_, win)
+				-- 		vim.wo[win].conceallevel = 2;
+				-- 		vim.wo[win].conecalcursor = "nc";
+				-- 	end
+				-- }
 			})
 		end,
 	},
+	-- {
+	-- 	"3rd/image.nvim",
+	-- 	build = false,
+	-- 	opts = {
+	-- 		processor = "magick_cli",
+	-- 		backend = "ueberzug",
+	-- 	},
+	-- },
 	"jwalton512/vim-blade",
+	{
+		'nvim-flutter/flutter-tools.nvim',
+		dependencies = {
+			'nvim-lua/plenary.nvim',
+			'stevearc/dressing.nvim', -- optional for vim.ui.select
+		},
+		config = function()
+			require("flutter-tools").setup({})
+		end,
+		ft = "dart",
+	},
 
 	-- TODO: https://github.com/rockerBOO/awesome-neovim?tab=readme-ov-file#markdown-and-latex
 	-- TODO: https://github.com/rockerBOO/awesome-neovim?tab=readme-ov-file#snippet
@@ -854,7 +920,6 @@ set smartindent
 set guifont=Monaco\ Nerd\ Font\ Mono:h12
 set showtabline=2
 
-set splitbelow
 set splitright
 ]])
 
@@ -917,7 +982,16 @@ function! Get_VSCode_Open_Loc()
 endfunction
 
 command Code call system('code ' . Get_VSCode_Open_Loc() . ' --goto "' . expand('%') . '":' . line('.'))
-nnoremap <silent> <leader>b :Code<CR>
+
+function! Source_Or_Open_VSCode()
+  if filereadable("./debug.vim")
+    source ./debug.vim
+  else
+    Code
+  endif
+endfunction
+
+nnoremap <silent> <leader>b :call Source_Or_Open_VSCode()<CR>
 
 
 " Get exact count of matches (No more >99)
