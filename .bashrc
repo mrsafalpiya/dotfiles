@@ -10,7 +10,11 @@ if [ -d ~/.local/bin ]; then
 		export PATH="$PATH:$folder"
 	done
 fi
-
+asdkahjsld aw
+d 
+adwaita awd
+awdaw
+Dawtdawdaw
 # Adds $GOPATH folder to $PATH
 export GOPATH=$HOME/go
 export PATH="$PATH:$GOPATH/bin"
